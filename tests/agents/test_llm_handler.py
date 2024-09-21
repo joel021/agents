@@ -18,6 +18,7 @@ instructions empty.""")
         self.gemini_handler = GeminiHandler(GEMINI_API_KEY,
                                             prompt_prefix,
                                             prompt_suffix)
+        self.gemini_handler_2 = GeminiHandler(GEMINI_API_KEY, "","")
 
     def test_generate_instructions(self):
         prompt = ("Create a web server REST API for authentication."
@@ -28,12 +29,14 @@ instructions empty.""")
                   "auth_spring/ with package name as com.auth.gourmet.restaurant.You have any permissions to do whatever in this folder, create, delete, update, read, "
                   "etc. To any files as well.")
         response_text = self.gemini_handler.generate_instructions(prompt)
-        print(response_text)
         assert response_text
 
     def test_create_tasks(self):
 
         prompt = "Create Spring Boot project."
         response_text = self.gemini_handler.generate_instructions(prompt)
-        print(response_text)
         assert response_text
+
+    def test_two_sections(self):
+        answer = self.gemini_handler_2.generate_instructions("Summary what I have asked to you until now.")
+        assert answer

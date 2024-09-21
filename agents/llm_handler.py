@@ -3,7 +3,7 @@ import os
 
 class GeminiHandler:
 
-    def __init__(self, api_key:str, prompt_prefix: str, prompt_suffix:str) -> None:
+    def __init__(self, api_key: str, prompt_prefix: str, prompt_suffix: str) -> None:
 
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel("gemini-1.5-flash")
