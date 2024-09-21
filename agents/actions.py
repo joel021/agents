@@ -12,10 +12,10 @@ class Actions:
         self.actions = {
 
             "execute_terminal": {
-                "instruction": self.execute_terminal,
+                "function": self.execute_terminal,
                 "args": {
-                    "path": "required",
-                    "command": "required"
+                    "path": "str required",
+                    "command": "str required"
                 }
             }
         }

@@ -1,9 +1,18 @@
+import google.generativeai as genai
+import os
 
-def generate_instructions(prompt:str):
-    
-    """Generates instructions in dictionary format using the LLM model."""
-    # Replace with your actual LLM logic or mock response
-    response = {"action": "click_on", "args": {"x": 100, "y": 200}}
-    instructions_dict = response
-    return instructions_dict
+class GeminiHandler:
+
+    def __init__(self, api_key:str, prompt_prefix: str, prompt_suffix:str) -> None:
+
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel("gemini-1.5-flash")
+        self.prompt_prefix = prompt_prefix
+        self.prompt_suffix = prompt_suffix
+
+    def generate_instructions(self, prompt: str) -> str:
+        
+        response = self.model.generate_content(f"{self.prompt_prefix}{prompt}{self.prompt_suffix}")
+
+        return response.text
 
