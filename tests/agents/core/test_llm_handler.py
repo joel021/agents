@@ -1,7 +1,7 @@
 import unittest
 
-from agents.llm_handler import GeminiHandler
-from config import GEMINI_API_KEY
+from agents.core.llm_handler import GeminiHandler
+from agents.config import GEMINI_API_KEY
 
 
 class TestGeminiHandler(unittest.TestCase):

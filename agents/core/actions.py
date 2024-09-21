@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-from agents.response import Response
+from agents.core.response import Response
 
 
 class Actions:

@@ -1,5 +1,5 @@
-from agents.actions import Actions
-from agents.response import Response
+from agents.core.actions import Actions
+from agents.core.response import Response
 
 
 class InstructionsHandler:
