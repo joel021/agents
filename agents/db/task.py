@@ -5,8 +5,9 @@ from agents.db.status import Status
 
 class Task(Document):
 
+    title = StringField()
     status = EnumField(Status, default=Status.TODO)
-    description = StringField() #What to do
+    specification = StringField() #What to do
     instructions = ListField(DictField()) #Set of instructions performed
     summary = StringField() #How have done
 

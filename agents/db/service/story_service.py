@@ -44,3 +44,7 @@ class StoryService:
         story.tasks.append(task)
         return story.save()
 
+    def set_summary(self, story: Story, summary: str):
+        story.summary = summary
+        return story.save()
+

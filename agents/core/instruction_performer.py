@@ -44,3 +44,7 @@ class InstructionPerformer:
     def create_task(self, epic_id: str, description: str):
 
         self.task_service.create(epic_id, description)
+
+    @staticmethod
+    def get_available_instructions_str():
+        return str(InstructionPerformer(None).actions).replace("'", "\"").replace(" ", "")

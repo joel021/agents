@@ -33,3 +33,6 @@ class EpicService:
         epic.status = status
         return epic.save()
 
+    def set_summary(self, epic: Epic, summary: str):
+        epic.summary = summary
+        return epic.save()

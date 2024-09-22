@@ -13,40 +13,42 @@ class EpicPerformer:
     def __init__(self, epic_service: EpicService, story_service: StoryService):
         self.epic_service = epic_service
         self.story_service = story_service
-
-        prompt_prefix = ("""Software Engineering context. Answer in json format, nothing more, like this: {"instructions": [{"function": "function_name",
-                "args":{"arg1":"v1","arg2":"v2"}},...], "summary": "summarize the instructions", "new_tasks": 
-        ["Any required task, described here in normal text."], "new_stories":...}. """)
-
-        prompt_suffix = (""" Possible instructions: {"function":"execute_command_line", 
-                "args":{"command": "(str)"}}.""")
-        self.llm_handler = GeminiHandler(GEMINI_API_KEY,
-                                         prompt_prefix,
-                                         prompt_suffix)
+        self.llm_handler = GeminiHandler(GEMINI_API_KEY)
         self.story_performer = StoryPerformer(self.llm_handler, self.story_service)
 
     def break_into_stories(self, epic: Epic) -> list[Story]:
-        resp_dict = self.llm_handler.generate_instructions_dict("Using scrum methodology for "
-                                                                   "development. "
-                                                                   "Break the following Epic into stories and put in "
-                                                                   "new_stories: "
-                                                                   f"{epic.description}")
-        new_stories = resp_dict.get("new_stories", [])
-        return self.epic_service.create_stories(epic, new_stories)
+
+        prompt_prefix = ('Software Engineering context. Answer in json format, nothing more, like this: '
+                         '{"summary": "summarize what have done", "new_stories": [{"title": "story title 1",'
+                         '"specification":"..."}, {"title": "story title 2", "specification": "..."}')
+        prompt = (
+            f"{prompt_prefix}Using scrum methodology for development. Break the following Epic into stories and put in "
+            f"new_stories: {epic.description}.")
+
+        resp_dict = self.llm_handler.generate_instructions_dict(prompt)
+        self.epic_service.create_stories(epic, resp_dict.get("new_stories", []))
+        return self.epic_service.set_summary(epic, resp_dict.get("summary", ""))
 
     def perform(self, epic: Epic) -> Epic:
 
         self.epic_service.set_status(epic, Status.IN_PROGRESS)
-        stories = epic.stories
-        i = 0
-        if not stories:
-            stories = self.break_into_stories(epic)
 
+        if not epic.stories:
+            epic = self.break_into_stories(epic)
+
+        stories = list(epic.stories)
+        i = 0
+        summary = epic.summary
         while stories:
 
-            story = self.story_performer.perform(stories[i])
+            story = self.story_performer.perform(stories[i], summary)
             if story.is_done():
                 self.story_service.set_status(stories.pop(i), Status.DONE)
+
+            if i == 0:
+                summary = story.summary
+            else:
+                summary += story.summary
 
             i += 1
 

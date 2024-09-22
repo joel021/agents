@@ -6,9 +6,11 @@ from agents.db.task import Task
 
 class Story(Document):
 
+    title = StringField()
     status = EnumField(Status, default=Status.TODO)
     description = StringField()
     tasks = ListField(ReferenceField(Task))
+    summary = StringField()
 
     def is_done(self):
 
