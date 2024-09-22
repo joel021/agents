@@ -1,14 +1,15 @@
 import subprocess
 import os
 
-from agents.core.response import Response
+from agents.core.model.response import Response
+from agents.db.service.task_service import TaskService
 
 
-class Actions:
+class InstructionPerformer:
 
+    def __init__(self, task_service: TaskService):
 
-    def __init__(self):
-
+        self.task_service = task_service
         self.actions = {
 
             "execute_terminal": {
@@ -16,6 +17,13 @@ class Actions:
                 "args": {
                     "path": "str required",
                     "command": "str required"
+                }
+            },
+            "create_task": {
+                "function": self.create_task,
+                "args": {
+                    "epic_id": "str required",
+                    "description": "str required",
                 }
             }
         }
@@ -32,3 +40,7 @@ class Actions:
             return Response(error, True)
 
         return Response(result, False)
+
+    def create_task(self, epic_id: str, description: str):
+
+        self.task_service.create(epic_id, description)

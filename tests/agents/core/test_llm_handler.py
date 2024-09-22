@@ -40,3 +40,14 @@ instructions empty.""")
     def test_two_sections(self):
         answer = self.gemini_handler_2.generate_instructions("Summary what I have asked to you until now.")
         assert answer
+
+    def test_generate_instructions_dict(self):
+        prompt = ("Create a web server REST API for authentication."
+                  " The functional requirements are: login (email and receive expirable link),"
+                  " logout. The non functional requirements are: authentication by JWT token, use relational database'"
+                  "for persistence. The architecture decision are: java 23, spring boot 3, postgress sql,"
+                  "junit tests for each method, junit for system tests. The project was just created on folder ~/gemini/"
+                  "auth_spring/ with package name as com.auth.gourmet.restaurant.You have any permissions to do whatever in this folder, create, delete, update, read, "
+                  "etc. To any files as well.")
+        response_dict = self.gemini_handler.generate_instructions_dict(prompt)
+        assert response_dict
