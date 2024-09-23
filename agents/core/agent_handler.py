@@ -1,7 +1,4 @@
-from agents.config import GEMINI_API_KEY
-from agents.core.epic_performer import EpicPerformer
-from agents.core.instructions_handler import InstructionsHandler
-from agents.core.llm_handler import GeminiHandler
+from agents.core.performer.epic_performer import EpicPerformer
 from agents.db.service.epic_service import EpicService
 
 

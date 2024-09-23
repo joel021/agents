@@ -1,4 +1,4 @@
-from agents.core.instruction_performer import InstructionPerformer
+from agents.core.performer.instruction_performer import InstructionPerformer
 from agents.core.instructions_handler import InstructionsHandler
 from agents.core.llm_handler import LLMHandler
 from agents.core.model.response import Response
@@ -16,6 +16,10 @@ class TaskPerformer:
         self.story_service = story_service
         self.llm_handler = llm_handler
         self.instructions_handler = InstructionsHandler(task_service)
+        self.prefix = ('Software Engineering context. Answer in json format, as follows: "function_name", "args":{"arg1":'
+                  '"v1","arg2":"v2"}},...], "summary": "summarize the instructions", "new_tasks": '
+                  '[{"title": "task 1", "specification": "..."}, ...]}. ')
+        self.max_tries = 3
 
     def execute_task(self, task: Task, prompt: str, story_id: str) -> tuple[Response, Task]:
 
@@ -26,16 +30,7 @@ class TaskPerformer:
 
         return resp, task
 
-    def perform(self, task: Task, story_id: str, summary: str) -> Task:
-
-        self.task_service.set_status(task, Status.IN_PROGRESS)
-        prefix = ('Software Engineering context. Answer in json format, as follows: "function_name", "args":{"arg1":'
-                  '"v1","arg2":"v2"}},...], "summary": "summarize the instructions", "new_tasks": '
-                  '[{"title": "task 1", "specification": "..."}, ...]}. ')
-        prompt = (f'{prefix}Given we have done. Solve the following task: story_id={story_id}, task title = {task.title}, '
-                  f'task specification = f{task.specification}. The available instructions/functions are: '
-                  f"{InstructionPerformer.get_available_instructions_str()}. Break it down into more tasks, in "
-                  f'new_tasks, If the task is too complex. We have done: {summary}')
+    def try_solve(self, task: Task, prompt: str, story_id: str, summary: str) -> tuple[Response, Task]:
 
         resp, task = self.execute_task(task, prompt, story_id)
 
@@ -43,12 +38,26 @@ class TaskPerformer:
         while resp.error:
             tries += 1
             logger.info(f"Error when performing task {task.id}")
-            prompt = (f'{prefix} I received the error {resp.msg} when performing {task.title}, specified '
+            prompt = (f'{self.prefix} I received the error {resp.msg} when performing {task.title}, specified '
                       f'as {task.specification}. We have done: {summary}')
             resp, task = self.execute_task(task, prompt, story_id)
-            if tries > 3:
+            if tries >= self.max_tries:
                 logger.info(f"Error ```{resp.msg}``` not solved.")
                 break
+        return resp, task
 
-        return task
+    def perform(self, task: Task, story_id: str, summary: str) -> Task:
 
+        self.task_service.set_status(task, Status.IN_PROGRESS)
+
+        prompt = (f'{self.prefix}Given we have done. Solve the following task: story_id={story_id}, task title = {task.title}, '
+                  f'task specification = f{task.specification}. The available instructions/functions are: '
+                  f"{InstructionPerformer.get_available_instructions_str()}. Break it down into more tasks, in "
+                  f'new_tasks, If the task is too complex. We have done: {summary}')
+
+        resp, task = self.try_solve(task, prompt, story_id, summary)
+
+        if resp.error:
+            return self.task_service.set_status(task, Status.ERROR)
+
+        return self.task_service.set_status(task, Status.DONE)

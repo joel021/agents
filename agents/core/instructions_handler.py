@@ -1,4 +1,4 @@
-from agents.core.instruction_performer import InstructionPerformer
+from agents.core.performer.instruction_performer import InstructionPerformer
 from agents.core.model.instruction import Instruction
 from agents.core.model.response import Response
 from agents.db.service.task_service import TaskService

@@ -1,6 +1,6 @@
 from agents.config import GEMINI_API_KEY
 from agents.core.llm_handler import GeminiHandler
-from agents.core.story_performer import StoryPerformer
+from agents.core.performer.story_performer import StoryPerformer
 from agents.db.epic import Epic
 from agents.db.service.epic_service import EpicService
 from agents.db.service.story_service import StoryService

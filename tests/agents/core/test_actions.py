@@ -1,5 +1,5 @@
 import unittest
-from agents.core.instruction_performer import InstructionPerformer
+from agents.core.performer.instruction_performer import InstructionPerformer
 from agents.core.model.response import Response
 
 

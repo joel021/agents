@@ -1,5 +1,5 @@
 from agents.core.llm_handler import LLMHandler
-from agents.core.task_performer import TaskPerformer
+from agents.core.performer.task_performer import TaskPerformer
 from agents.db.service.story_service import StoryService
 from agents.db.service.task_service import TaskService
 from agents.db.status import Status
