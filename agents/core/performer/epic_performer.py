@@ -19,8 +19,8 @@ class EpicPerformer:
     def break_into_stories(self, epic: Epic) -> list[Story]:
 
         prompt_prefix = ('Software Engineering context. Answer in json format, nothing more, like this: '
-                         '{"summary": "summarize what have done", "new_stories": [{"title": "story title 1",'
-                         '"specification":"..."}, {"title": "story title 2", "specification": "..."}')
+                         '```{"summary": "summarize what have done", "new_stories": [{"title": "story title 1",'
+                         '"specification":"..."},...]}```.')
         prompt = (
             f"{prompt_prefix}Using scrum methodology for development. Break the following Epic into stories and put in "
             f"new_stories: {epic.description}.")

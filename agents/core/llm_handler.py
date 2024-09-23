@@ -1,7 +1,7 @@
-import json
-
 import google.generativeai as genai
-import re
+
+from agents.utils.jsons import extract_json
+
 
 class LLMHandler:
 
@@ -28,8 +28,5 @@ class GeminiHandler(LLMHandler):
     def generate_instructions_dict(self, prompt: str) -> dict:
 
         instructions_str = self.generate_instructions(self.generate_instructions(prompt))
-        open_braces = instructions_str.find("{")
-        close_braces = re.search(r"\}", instructions_str).start()
-
-        return json.loads(instructions_str[open_braces:close_braces+1])
-
+        print(instructions_str)
+        return extract_json(instructions_str)

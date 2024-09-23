@@ -16,9 +16,10 @@ class TaskPerformer:
         self.story_service = story_service
         self.llm_handler = llm_handler
         self.instructions_handler = InstructionsHandler(task_service)
-        self.prefix = ('Software Engineering context. Answer in json format, as follows: "function_name", "args":{"arg1":'
-                  '"v1","arg2":"v2"}},...], "summary": "summarize the instructions", "new_tasks": '
-                  '[{"title": "task 1", "specification": "..."}, ...]}. ')
+        self.prefix = ('Software Engineering context. Answer in valid json format, nothing more, as structured: '
+                       '```{"instructions": [{"function_name": "function name", "args":{"arg1":'
+                  '"v1",...}},...], "summary": "summarize the instructions", "new_tasks": '
+                  '[{"title": "task 1", "specification": "..."}, ...]}```.')
         self.max_tries = 3
 
     def execute_task(self, task: Task, prompt: str, story_id: str) -> tuple[Response, Task]:

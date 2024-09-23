@@ -18,7 +18,7 @@ class StoryPerformer:
     def breakdown_into_tasks(self, story: Story) -> Story:
 
         prompt = ('Software engineering context. Answer in the following format: ```{"summary": "summarize the what '
-                  'have done", "new_tasks": [{"title": "...", "specification": "..."}]}```. Thinking about scrum '
+                  'have done", "new_tasks": [{"title": "...", "specification": "..."}, ...]}```. Thinking about scrum '
                   f'methodology, break down the following Story into tasks and put in new_stories: {story.description}')
 
         resp_dict = self.gemini_handler.generate_instructions_dict(prompt)
