@@ -22,8 +22,10 @@ class GeminiHandler(LLMHandler):
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel("gemini-1.5-flash")
 
-    def generate_instructions(self, prompt: str) -> str:
-        return self.model.generate_content(prompt).text
+    def generate_instructions(self, prompt: str, response_schema) -> str:
+        return self.model.generate_content(prompt, generation_config=genai.GenerationConfig(
+            response_mime_type="application/json", response_schema=response_schema
+        ),).text
 
     def generate_instructions_dict(self, prompt: str) -> dict:
 

@@ -1,9 +1,10 @@
+import typing
 from mongoengine import Document, ListField, DictField, StringField, EnumField
 
 from agents.db.status import Status
 
 
-class Task(Document):
+class Task(typing.TypedDict, Document):
 
     title = StringField()
     status = EnumField(Status, default=Status.TODO)
