@@ -19,20 +19,17 @@ class InstructionPerformer:
                     "command": "(str) any Ubuntu 22.04 command or commands using &&"
                 }
             },
-            "create_task": {
-                "function": self.create_task,
-                "args": {
-                    "epic_id": "(str) required",
-                    "specification": "(str) the task description. Example of usage is when need to modify a file. "
-                                     "This task can contain the file "
-                                     "information's, including its code, to guide the developer update the file "
-                                     "content.",
-                }
-            },
             "scan_project_folders_files": {
                 "function": self.scan_project,
                 "args": {
                     "path": "(str) root or specific part of the project complete path",
+                }
+            },
+            "create_file": {
+                "function": self.create_file,
+                "args": {
+                    "file_path": "(str) file path",
+                    "content": "(str) file content",
                 }
             }
         }
@@ -49,8 +46,8 @@ class InstructionPerformer:
 
         return Response(result, False)
 
-    def create_task(self, epic_id: str, description: str):
-        self.task_service.create(epic_id, description)
+    def create_file(self, file_path: str):
+        return Response("created successfully.", error=False)
 
     def scan_project(self, path: str):
         return recursive_scan(path)

@@ -6,7 +6,7 @@ from agents.utils.jsons import extract_json
 
 class TestJsons(unittest.TestCase):
 
-    def test_scan_directory(self):
+    def test_extract_json(self):
 
         text = ('```json '
                 '{"instructions": [{"function_name": "execute_terminal", "args": {"path": "/home/joel/documents/'
@@ -24,5 +24,4 @@ class TestJsons(unittest.TestCase):
 
         result_dict = extract_json(text)
         assert result_dict['instructions']
-
 

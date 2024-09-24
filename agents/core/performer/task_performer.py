@@ -16,10 +16,10 @@ class TaskPerformer:
         self.story_service = story_service
         self.llm_handler = llm_handler
         self.instructions_handler = InstructionsHandler(task_service)
-        self.prefix = ('Software Engineering context. Answer in valid json format, nothing more, as structured: '
-                       '```{"instructions": [{"function_name": "function name", "args":{"arg1":'
-                  '"v1",...}},...], "summary": "summarize the instructions", "new_tasks": '
-                  '[{"title": "task 1", "specification": "..."}, ...]}```.')
+        self.prefix = ('Answer following the json structure: {"instructions": [{"function_name": "function name", '
+                       '"args":{"arg1":"v1", "arg2": "v2", ...}}, ...], "summary": "summarize the instructions", '
+                       '"new_tasks": [{"title": "task 1", "specification": "specifications"}, {"title": "task 2", '
+                       '"specification": "specifications"}, ...]}.')
         self.max_tries = 3
 
     def execute_task(self, task: Task, prompt: str, story_id: str) -> tuple[Response, Task]:
@@ -51,10 +51,10 @@ class TaskPerformer:
 
         self.task_service.set_status(task, Status.IN_PROGRESS)
 
-        prompt = (f'{self.prefix}Given we have done. Solve the following task: story_id={story_id}, task title = {task.title}, '
-                  f'task specification = f{task.specification}. The available instructions/functions are: '
-                  f"{InstructionPerformer.get_available_instructions_str()}. Break it down into more tasks, in "
-                  f'new_tasks, If the task is too complex. We have done: {summary}')
+        prompt = (f'{self.prefix} Solve the following task using the available instructions: story_id={story_id},'
+                  f' task title = {task.title}, task specification = f{task.specification}. '
+                  f'The available instructions/functions are: {InstructionPerformer.get_available_instructions_str()}. '
+                  f'Break it down into more tasks, in new_tasks, If the task is too complex. We have done: {summary}')
 
         resp, task = self.try_solve(task, prompt, story_id, summary)
 
