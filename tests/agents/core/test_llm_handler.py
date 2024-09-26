@@ -2,6 +2,7 @@ import unittest
 
 from agents.core.llm_handler import GeminiHandler
 from agents.config import GEMINI_API_KEY
+from agents.core.model.llm_reponse import StoryResponse
 
 
 class TestGeminiHandler(unittest.TestCase):
@@ -15,10 +16,8 @@ class TestGeminiHandler(unittest.TestCase):
         prompt_suffix = ("""Possible actions: {"function":"execute_command_line", 
 "args":{"command": "(str)"}}. If the task is too big, break it down in sub tasks, on "next_tasks" instead and let 
 instructions empty.""")
-        self.gemini_handler = GeminiHandler(GEMINI_API_KEY,
-                                            prompt_prefix,
-                                            prompt_suffix)
-        self.gemini_handler_2 = GeminiHandler(GEMINI_API_KEY, "","")
+        self.gemini_handler = GeminiHandler(GEMINI_API_KEY)
+        self.gemini_handler_2 = GeminiHandler(GEMINI_API_KEY)
 
     def test_generate_instructions(self):
         prompt = ("Create a web server REST API for authentication."
@@ -28,7 +27,8 @@ instructions empty.""")
                   "junit tests for each method, junit for system tests. The project was just created on folder ~/gemini/"
                   "auth_spring/ with package name as com.auth.gourmet.restaurant.You have any permissions to do whatever in this folder, create, delete, update, read, "
                   "etc. To any files as well.")
-        response_text = self.gemini_handler.generate_instructions(prompt)
+        response_text = self.gemini_handler.generate_instructions(prompt, list[StoryResponse])
+        print(response_text)
         assert response_text
 
     def test_create_tasks(self):

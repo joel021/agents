@@ -8,10 +8,10 @@ class LLMHandler:
     def __init__(self):
         pass
 
-    def generate_instructions(self, prompt: str) -> str:
+    def generate_instructions(self, prompt: str, response_schema: any) -> str:
         raise NotImplementedError("This is an abstract class")
 
-    def generate_instructions_dict(self, prompt: str) -> dict:
+    def generate_instructions_dict(self, prompt: str, response_schema: any) -> dict:
         raise NotImplementedError("This is an abstract class")
 
 
@@ -27,8 +27,8 @@ class GeminiHandler(LLMHandler):
             response_mime_type="application/json", response_schema=response_schema
         ),).text
 
-    def generate_instructions_dict(self, prompt: str) -> dict:
+    def generate_instructions_dict(self, prompt: str, response_schema) -> dict:
 
-        instructions_str = self.generate_instructions(self.generate_instructions(prompt))
+        instructions_str = self.generate_instructions(self.generate_instructions(prompt, response_schema))
         print(instructions_str)
         return extract_json(instructions_str)
