@@ -1,4 +1,4 @@
-from agents.core.dto.llm_reponse import InstructionResponse
+from agents.core.dto.llm_reponse import BreakTaskIntoInstructionsResponse
 from agents.core.performer.instruction_performer import InstructionPerformer
 from agents.core.instructions_handler import InstructionsHandler
 from agents.core.llm_handler import LLMHandler
@@ -25,7 +25,7 @@ class TaskPerformer:
 
     def execute_task(self, task: Task, prompt: str, story_id: str) -> tuple[Response, Task]:
 
-        instructions_dict = self.llm_handler.generate_instructions_dict(prompt, InstructionResponse())
+        instructions_dict = self.llm_handler.generate_instructions_dict(prompt, BreakTaskIntoInstructionsResponse)
         self.story_service.create_tasks_to_story_id(story_id, instructions_dict.get("new_tasks", []))
         task = self.task_service.set_summary(task, instructions_dict.get("summary", ""))
         resp = self.instructions_handler.execute_instructions(instructions_dict.get("instructions", []))
