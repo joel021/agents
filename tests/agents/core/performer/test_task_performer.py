@@ -25,14 +25,15 @@ class TestTaskPerformer(unittest.TestCase):
         self.story = Story(title="Restaurant CRUD.").save()
         self.task_performer = TaskPerformer(self.gemini_handler, TaskService(story_service), story_service)
         self.task = Task(title="Title",
-                    specification="Create a service Java class on package com.restaurant for create User. "
-                                  "User has name and email. The project location is /home/joel/documents/restaurant/.").save()
+                        specification="Create a service Java class on package com.restaurant for create User. "
+                                  "User has name and email. The project location is /home/joel/documents/restaurant/."
+                        ).save()
 
     def test_perform(self):
 
         task = Task(title="Title",
                     specification="Create a service Java class on package com.restaurant for create User. "
-                                  "User has name and email. The project location is /home/joel/documents/restaurant/.")
+                                  "User has name and email. The project location is /home/joel/Documents/restaurant/.")
 
         performed_task = self.task_performer.perform(task, str(self.story.id),
                                                      "We have created the project, it is empty yet.")

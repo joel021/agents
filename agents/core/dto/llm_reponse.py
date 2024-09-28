@@ -11,6 +11,17 @@ class TaskResponse(typing.TypedDict):
     specification: str
 
 
+class ArgumentResponse(typing.TypedDict):
+
+    arg_key: str
+    value: str
+
+
+class InstructionResponse(typing.TypedDict):
+    function_name: str
+    arguments: typing.List[ArgumentResponse]
+
+
 class BreakEpicIntoStoryResponse(typing.TypedDict):
     """
     ```{"summary": "summarize what have done", "new_stories": [{"title": "story title 1",'
@@ -25,14 +36,8 @@ class BreakStoryIntoTasksResponse(typing.TypedDict):
     new_tasks: typing.List[TaskResponse]
 
 
-class InstructionResponse(typing.TypedDict):
-    function_name: str
-    args: dict
+class BreakTaskIntoInstructionsResponse(typing.TypedDict):
+    instructions: typing.List[InstructionResponse]
     summary: str
-    next_tasks: list[TaskResponse]
+    next_tasks: typing.List[TaskResponse]
 
-    def __init__(self, function_name: str, args: dict, summary: str, next_tasks: list[TaskResponse]):
-        self.function_name: str = function_name
-        self.args: dict = args
-        self.summary: str = summary
-        self.next_tasks: list[dict] = next_tasks

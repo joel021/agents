@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-from agents.core.model.response import Response
+from agents.core.dto.response import Response
 from agents.db.service.task_service import TaskService
 from agents.utils.files import recursive_scan
 
@@ -16,7 +16,7 @@ class InstructionPerformer:
                 "function": self.execute_terminal,
                 "args": {
                     "path": "(str) required",
-                    "command": "(str) any Ubuntu 22.04 command or commands using &&"
+                    "command": "(str) any Ubuntu 22.04 command or commands"
                 }
             },
             "scan_project_folders_files": {
@@ -30,6 +30,19 @@ class InstructionPerformer:
                 "args": {
                     "file_path": "(str) file path",
                     "content": "(str) file content",
+                }
+            },
+            "update_file": {
+                "function": self.update_file,
+                "args": {
+                    "file_path": "(str) file path",
+                    "content": "(str) file content",
+                }
+            },
+            "read_file": {
+                "function": self.read_file,
+                "args": {
+                    "file_path": "(str) file path",
                 }
             }
         }
@@ -49,8 +62,14 @@ class InstructionPerformer:
     def create_file(self, file_path: str):
         return Response("created successfully.", error=False)
 
-    def scan_project(self, path: str):
+    def update_file(self, file_path: str, content: str):
+        return Response("updated successfully.", error=False)
+
+    def scan_project(self, path: str, content: str):
         return recursive_scan(path)
+
+    def read_file(self, path: str):
+        return Response("reading successfully.", error=False)
 
     @staticmethod
     def get_available_instructions_str():

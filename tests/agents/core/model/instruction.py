@@ -1,6 +1,6 @@
 import unittest
 
-from agents.core.model.instruction import Instruction
+from agents.core.dto.instruction import Instruction
 
 
 class TestInstruction(unittest.TestCase):

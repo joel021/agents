@@ -29,6 +29,5 @@ class GeminiHandler(LLMHandler):
 
     def generate_instructions_dict(self, prompt: str, response_schema) -> dict:
 
-        instructions_str = self.generate_instructions(self.generate_instructions(prompt, response_schema))
-        print(instructions_str)
+        instructions_str = self.generate_instructions(prompt, response_schema)
         return extract_json(instructions_str)

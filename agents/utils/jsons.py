@@ -1,9 +1,14 @@
 import re
 import json
 
-def extract_json(text: str) -> dict:
+from agents.logger import logger
 
-    open_braces = text.find("{")
-    close_braces = text.rfind("}")
-    json_limited = text[open_braces:close_braces + 1]
-    return json.loads(json_limited)
+
+def extract_json(text: str) -> dict or None:
+
+    try:
+        return json.loads(text)
+    except Exception as e:
+        logger.error(str(e))
+        return None
+

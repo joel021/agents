@@ -1,7 +1,8 @@
+from agents.core.dto.llm_reponse import InstructionResponse
 from agents.core.performer.instruction_performer import InstructionPerformer
 from agents.core.instructions_handler import InstructionsHandler
 from agents.core.llm_handler import LLMHandler
-from agents.core.model.response import Response
+from agents.core.dto.response import Response
 from agents.db.service.story_service import StoryService
 from agents.db.service.task_service import TaskService
 from agents.db.status import Status
@@ -24,7 +25,7 @@ class TaskPerformer:
 
     def execute_task(self, task: Task, prompt: str, story_id: str) -> tuple[Response, Task]:
 
-        instructions_dict = self.llm_handler.generate_instructions_dict(prompt)
+        instructions_dict = self.llm_handler.generate_instructions_dict(prompt, InstructionResponse())
         self.story_service.create_tasks_to_story_id(story_id, instructions_dict.get("new_tasks", []))
         task = self.task_service.set_summary(task, instructions_dict.get("summary", ""))
         resp = self.instructions_handler.execute_instructions(instructions_dict.get("instructions", []))
@@ -39,7 +40,7 @@ class TaskPerformer:
         while resp.error:
             tries += 1
             logger.info(f"Error when performing task {task.id}")
-            prompt = (f'{self.prefix} I received the error {resp.msg} when performing {task.title}, specified '
+            prompt = (f'I received the error {resp.msg} when performing {task.title}, specified '
                       f'as {task.specification}. We have done: {summary}')
             resp, task = self.execute_task(task, prompt, story_id)
             if tries >= self.max_tries:
@@ -51,7 +52,7 @@ class TaskPerformer:
 
         self.task_service.set_status(task, Status.IN_PROGRESS)
 
-        prompt = (f'{self.prefix} Solve the following task using the available instructions: story_id={story_id},'
+        prompt = (f'Solve the following task using the available instructions: story_id={story_id},'
                   f' task title = {task.title}, task specification = f{task.specification}. '
                   f'The available instructions/functions are: {InstructionPerformer.get_available_instructions_str()}. '
                   f'Break it down into more tasks, in new_tasks, If the task is too complex. We have done: {summary}')

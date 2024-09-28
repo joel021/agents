@@ -1,6 +1,6 @@
+from agents.core.dto.llm_reponse import InstructionResponse
 from agents.core.performer.instruction_performer import InstructionPerformer
-from agents.core.model.instruction import Instruction
-from agents.core.model.response import Response
+from agents.core.dto.response import Response
 from agents.db.service.task_service import TaskService
 
 
@@ -9,7 +9,7 @@ class InstructionsHandler:
     def __init__(self, task_service: TaskService):
         self.performer = InstructionPerformer(task_service)
 
-    def execute_instruction(self, instruction: Instruction):
+    def execute_instruction(self, instruction: InstructionResponse):
 
         if not instruction.function_name:
             return Response(None, False)
@@ -28,7 +28,7 @@ class InstructionsHandler:
     def execute_instructions(self, instructions: list[dict]):
 
         for instruction in instructions:
-            response = self.execute_instruction(Instruction(**instruction))
+            response = self.execute_instruction(InstructionResponse(**instruction))
 
             if response.error:
                 return response
