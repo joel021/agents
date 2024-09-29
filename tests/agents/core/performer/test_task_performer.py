@@ -30,12 +30,18 @@ class TestTaskPerformer(unittest.TestCase):
                         ).save()
 
     def test_perform(self):
-
+        specification = (
+            "Create the User model implementation for authentication. User has name, address, birthdate, email. "
+            "The project package "
+            "is com.auth.gourmet.Restaurant. We are using maven and Java 17 with Spring boot 3."
+            "The project location is /home/joel/Documents/restaurant/."
+        )
         task = Task(title="Title",
-                    specification="Create a service Java class on package com.restaurant for create User. "
-                                  "User has name and email. The project location is /home/joel/Documents/restaurant/.")
+                    specification=specification)
 
         performed_task = self.task_performer.perform(task, str(self.story.id),
-                                                     "We have created the project, it is empty yet.")
+                                                     "We have created the project, it is empty yet. "
+                                                     "We added the Spring Web dependency.")
+        print(performed_task.instructions)
 
         assert performed_task.status == Status.DONE

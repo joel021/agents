@@ -24,3 +24,6 @@ class TaskService:
         task.summary = summary
         return task.save()
 
+    def set_instructions(self, task: Task, instructions: list[dict]) -> Task:
+        task.instructions = instructions
+        return task.save()

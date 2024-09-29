@@ -16,46 +16,81 @@ class TaskPerformer:
         self.task_service = task_service
         self.story_service = story_service
         self.llm_handler = llm_handler
-        self.instructions_handler = InstructionsHandler(task_service)
-        self.prefix = ('Answer following the json structure: {"instructions": [{"function_name": "function name", '
-                       '"args":{"arg1":"v1", "arg2": "v2", ...}}, ...], "summary": "summarize the instructions", '
-                       '"new_tasks": [{"title": "task 1", "specification": "specifications"}, {"title": "task 2", '
-                       '"specification": "specifications"}, ...]}.')
-        self.max_tries = 3
+        self.instructions_handler = InstructionsHandler()
 
-    def execute_task(self, task: Task, prompt: str, story_id: str) -> tuple[Response, Task]:
+    def instruction_to_str(self, instructions: list[dict]) -> list[str]:
 
-        instructions_dict = self.llm_handler.generate_instructions_dict(prompt, BreakTaskIntoInstructionsResponse)
-        self.story_service.create_tasks_to_story_id(story_id, instructions_dict.get("new_tasks", []))
-        task = self.task_service.set_summary(task, instructions_dict.get("summary", ""))
-        resp = self.instructions_handler.execute_instructions(instructions_dict.get("instructions", []))
+        return [instruction['title'] for instruction in instructions]
 
-        return resp, task
+    def execute_instructions_dynamically(self, task: Task, story_id: str, initial_instructions: list,
+                                         summary: str) -> tuple[Response, Task]:
+        """
+        Execute instructions dynamically, updating the instruction set after each one based on feedback from the LLM.
+        """
+        instructions = initial_instructions
+        results = []
+        current_result = None
+        summary = summary
+        performed_instructions = []
+        while instructions:
+            instruction = instructions.pop(0)
+            current_result = self.instructions_handler.execute_instruction(instruction)
+
+            results.append({
+                "instruction": instruction,
+                "result": current_result
+            })
+
+            if current_result.error:
+                logger.info(f"Error occurred while executing instruction: {current_result.msg}")
+                break
+            performed_instructions.append(instruction)
+            feedback_prompt = (
+                f'Task specification: {task.specification}. '
+                f'We have completed the following instructions: {results}. '
+                f'The result of the last instruction was: {current_result}. '
+                f'We are going to execute the following instructions: ```{self.instruction_to_str(instructions)}```'
+                f'Adjust the remaining instructions if necessary. Summarize the instructions done to until now.'
+                f'The available instructions/functions are: {InstructionPerformer.get_available_instructions_str()}. '
+            )
+            feedback = self.llm_handler.generate_instructions_dict(feedback_prompt, BreakTaskIntoInstructionsResponse)
+            instructions = feedback.get("instructions", instructions)  # Use updated instructions or continue
+            new_tasks = feedback.get("new_tasks", [])
+            if new_tasks:
+                self.story_service.create_tasks_to_story_id(story_id, new_tasks)
+            summary = feedback.get("summary", summary)
+
+        task = self.task_service.set_summary(task, summary)
+        task = self.task_service.set_instructions(task, performed_instructions)
+        if not current_result:
+            current_result = Response("No tasks performed.", False)
+
+        return current_result, task
 
     def try_solve(self, task: Task, prompt: str, story_id: str, summary: str) -> tuple[Response, Task]:
 
-        resp, task = self.execute_task(task, prompt, story_id)
+        initial_instructions_dict = self.llm_handler.generate_instructions_dict(prompt,
+                                                                                BreakTaskIntoInstructionsResponse)
+        print(f"initial_instructions: {initial_instructions_dict}")
+        initial_instructions = initial_instructions_dict.get("instructions", [])
+        self.story_service.create_tasks_to_story_id(story_id, initial_instructions_dict.get("new_tasks", []))
+        resp, task = self.execute_instructions_dynamically(task, story_id, initial_instructions, summary)
 
-        tries = 0
-        while resp.error:
-            tries += 1
-            logger.info(f"Error when performing task {task.id}")
-            prompt = (f'I received the error {resp.msg} when performing {task.title}, specified '
-                      f'as {task.specification}. We have done: {summary}')
-            resp, task = self.execute_task(task, prompt, story_id)
-            if tries >= self.max_tries:
-                logger.info(f"Error ```{resp.msg}``` not solved.")
-                break
         return resp, task
 
     def perform(self, task: Task, story_id: str, summary: str) -> Task:
-
+        """
+        Perform a task by breaking it down into instructions and dynamically updating the instructions as needed.
+        """
         self.task_service.set_status(task, Status.IN_PROGRESS)
 
-        prompt = (f'Solve the following task using the available instructions: story_id={story_id},'
-                  f' task title = {task.title}, task specification = f{task.specification}. '
-                  f'The available instructions/functions are: {InstructionPerformer.get_available_instructions_str()}. '
-                  f'Break it down into more tasks, in new_tasks, If the task is too complex. We have done: {summary}')
+        prompt = (
+            f'Using the available instructions, solve the following task: story_id={story_id}, '
+            f'task title = {task.title}, task specification = {task.specification}. '
+            f'The available instructions/functions are: {InstructionPerformer.get_available_instructions_str()}. '
+            f'Break it down into more tasks, in new_tasks, if the task is too complex. '
+            f'We have completed: {summary}'
+        )
 
         resp, task = self.try_solve(task, prompt, story_id, summary)
 

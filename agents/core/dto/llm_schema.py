@@ -1,7 +1,7 @@
-from typing import List, TypedDict
+import typing_extensions as typing
 
 
-class StoryResponse(TypedDict):
+class StorySchema(typing.TypedDict):
     title: str
     specification: str
 
@@ -10,7 +10,7 @@ class StoryResponse(TypedDict):
         self.specification = specification
 
 
-class TaskResponse(TypedDict):
+class TaskSchema(typing.TypedDict):
     title: str
     specification: str
 
@@ -19,7 +19,7 @@ class TaskResponse(TypedDict):
         self.specification = specification
 
 
-class ArgumentResponse(TypedDict):
+class ArgumentSchema(typing.TypedDict):
     arg: str
     value: str
 
@@ -28,43 +28,43 @@ class ArgumentResponse(TypedDict):
         self.value = value
 
 
-class InstructionResponse(TypedDict):
+class InstructionSchema(typing.TypedDict):
     function_name: str
-    arguments: List[ArgumentResponse]
+    arguments: typing.List[ArgumentSchema]
 
-    def __init__(self, function_name: str, arguments: List[ArgumentResponse]):
+    def __init__(self, function_name: str, arguments: typing.List[ArgumentSchema]):
         self.function_name = function_name
         self.arguments = arguments
 
 
-class BreakEpicIntoStoryResponse(TypedDict):
+class BreakEpicIntoStorySchema(typing.TypedDict):
     """
     ```{"summary": "summarize what have done", "new_stories": [{"title": "story title 1",'
                          '"specification":"..."},...]}```
     """
     summary: str
-    new_stories: List[StoryResponse]
+    new_stories: typing.List[StorySchema]
 
-    def __init__(self, summary: str, new_stories: List[StoryResponse]):
+    def __init__(self, summary: str, new_stories: typing.List[StorySchema]):
         self.summary = summary
         self.new_stories = new_stories
 
 
-class BreakStoryIntoTasksResponse(TypedDict):
+class BreakStoryIntoTasksSchema(typing.TypedDict):
     summary: str
-    new_tasks: List[TaskResponse]
+    new_tasks: typing.List[TaskSchema]
 
-    def __init__(self, summary: str, new_tasks: List[TaskResponse]):
+    def __init__(self, summary: str, new_tasks: typing.List[TaskSchema]):
         self.summary = summary
         self.new_tasks = new_tasks
 
 
-class BreakTaskIntoInstructionsResponse(TypedDict):
-    instructions: List[InstructionResponse]
+class BreakTaskIntoInstructionsSchema(typing.TypedDict):
+    instructions: typing.List[InstructionSchema]
     summary: str
-    next_tasks: List[TaskResponse]
+    next_tasks: typing.List[TaskSchema]
 
-    def __init__(self, instructions: List[InstructionResponse], summary: str, next_tasks: List[TaskResponse]):
+    def __init__(self, instructions: typing.List[InstructionSchema], summary: str, next_tasks: typing.List[TaskSchema]):
         self.instructions = instructions
         self.summary = summary
         self.next_tasks = next_tasks
