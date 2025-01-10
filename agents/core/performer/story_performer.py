@@ -1,3 +1,4 @@
+from agents.core.agents_switch import AgentSwitch
 from agents.core.llm_handler import LLMHandler
 from agents.core.performer.task_performer import TaskPerformer
 from agents.db.service.story_service import StoryService
@@ -9,15 +10,15 @@ from agents.logger import logger
 
 class StoryPerformer:
 
-    def __init__(self, llm_handler: LLMHandler, story_service: StoryService):
-        self.gemini_handler = llm_handler
+    def __init__(self, agent_switch: AgentSwitch, story_service: StoryService):
+        self.gemini_handler = agent_switch.get_llm_agent()
         self.story_service = story_service
         self.task_service = TaskService(story_service)
-        self.task_performer = TaskPerformer(llm_handler, self.task_service, story_service)
+        self.task_performer = TaskPerformer(agent_switch, self.task_service, story_service)
 
     def breakdown_into_tasks(self, story: Story) -> Story:
 
-        prompt = ('Software engineering context. Answer in the following format: ```{"summary": "summarize the what '
+        prompt = ('You are a software engineer. Answer in the following format: ```{"summary": "summarize the what '
                   'have done", "new_tasks": [{"title": "...", "specification": "..."}, ...]}```. Thinking about scrum '
                   f'methodology, break down the following Story into tasks and put in new_stories: {story.description}')
 

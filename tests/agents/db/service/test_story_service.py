@@ -8,7 +8,7 @@ from agents.db.story import Story
 from agents.db.task import Task
 
 
-class TestDeviceChat(unittest.TestCase):
+class TestStoryService(unittest.TestCase):
 
     @classmethod
     def setUp(self):
@@ -20,7 +20,7 @@ class TestDeviceChat(unittest.TestCase):
     def test_add_task(self):
 
         story_id = str(self.story.id)
-        task = Task(description="Description of task").save()
+        task = Task(specification="Description of task").save()
         story = self.story_service.add_task(story_id, task)
 
         assert len(story.tasks) > 0

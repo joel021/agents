@@ -1,10 +1,10 @@
 import json
 import unittest
 
+from agents.core.dto.llm_schema import BreakEpicIntoStoriesSchema, BreakStoryIntoTasksSchema, StorySchema, \
+    BreakTaskIntoInstructionsSchema
 from agents.core.llm_handler import GeminiHandler
 from agents.config import GEMINI_API_KEY
-from agents.core.dto.llm_reponse import TaskResponse, BreakEpicIntoStoryResponse, \
-    BreakStoryIntoTasksResponse, BreakTaskIntoInstructionsResponse
 from agents.core.performer.instruction_performer import InstructionPerformer
 
 
@@ -25,7 +25,7 @@ class TestGeminiHandler(unittest.TestCase):
                   "auth_spring/ with package name as com.auth.gourmet.restaurant. "
                   "You have any permissions to do whatever in this folder, create, delete, update, read, "
                   "etc. To any files as well.")
-        response_text = self.gemini_handler.generate_instructions(prompt, BreakEpicIntoStoryResponse)
+        response_text = self.gemini_handler.generate_instructions(prompt, BreakEpicIntoStoriesSchema)
         assert json.loads(response_text)
 
     def test_generate_instructions_break_into_tasks(self):
@@ -33,13 +33,13 @@ class TestGeminiHandler(unittest.TestCase):
                   "The package name is com.example.restaurant. The project location is /home/gemini/restaurant/ ."
                   "The project was just created using spring boot 3 initializer. Break this story into specific "
                   "well specified tasks for guide the developers develop this feature.")
-        response_text = self.gemini_handler.generate_instructions(prompt, BreakStoryIntoTasksResponse)
+        response_text = self.gemini_handler.generate_instructions(prompt, BreakStoryIntoTasksSchema)
         assert json.loads(response_text)
 
     def test_create_tasks(self):
 
         prompt = "Create Spring Boot project."
-        response_text = self.gemini_handler.generate_instructions(prompt, list[TaskResponse])
+        response_text = self.gemini_handler.generate_instructions(prompt, list[StorySchema])
         assert json.loads(response_text)
 
     def test_generate_instructions_dict(self):
@@ -49,5 +49,5 @@ class TestGeminiHandler(unittest.TestCase):
                   'model package in com.example.restaurant.model.User and has the following attributes: '
                   'name, email, password, roles. The available actions for perform this task are: '
                   f'{InstructionPerformer.get_available_instructions_str()}')
-        response_dict = self.gemini_handler.generate_instructions_dict(prompt, BreakTaskIntoInstructionsResponse)
+        response_dict = self.gemini_handler.generate_instructions_dict(prompt, BreakTaskIntoInstructionsSchema)
         assert response_dict

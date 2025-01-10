@@ -37,7 +37,7 @@ class InstructionSchema(typing.TypedDict):
         self.arguments = arguments
 
 
-class BreakEpicIntoStorySchema(typing.TypedDict):
+class BreakEpicIntoStoriesSchema(typing.TypedDict):
     """
     ```{"summary": "summarize what have done", "new_stories": [{"title": "story title 1",'
                          '"specification":"..."},...]}```

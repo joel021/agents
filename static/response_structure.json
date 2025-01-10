@@ -1,1 +1,17 @@
-{"instructions": [{"function": "function_name", "args":{"arg1":"v1","arg2":"v2"}},...], "summary": "summarize the instructions", "new_tasks": ["Any required task, described here in normal text."], "new_stories":...}
+{
+  "instructions": [
+    {
+      "function": "function_name",
+      "args": {
+        "arg1":"v1",
+        "arg2":"v2"
+      }
+    },
+    ...
+  ],
+  "summary": "summarize the instructions",
+  "new_tasks": ["Any required task, described here in normal text."],
+  "new_stories": [
+    ...
+  ]
+}

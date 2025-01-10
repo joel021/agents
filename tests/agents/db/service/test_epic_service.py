@@ -51,6 +51,6 @@ class TestDeviceChat(unittest.TestCase):
             description="Epic description",
             stories=None).save()
         stories = [Story(description="Story1"), Story(description="Story2")]
-        stories_saved = self.epic_service.create_stories(epic, stories)
+        stories_saved = self.epic_service.add_stories(epic, stories)
 
         assert len(stories_saved) == 2

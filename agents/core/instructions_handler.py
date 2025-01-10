@@ -23,7 +23,6 @@ class InstructionsHandler:
             return Response(f"Unsupported instruction: {function_name}", True)
 
         args_dict = self.convert_to_dict(instruction.get("arguments", []))
-        print(args_dict)
         try:
             return function_callable(**args_dict)
         except Exception as e:

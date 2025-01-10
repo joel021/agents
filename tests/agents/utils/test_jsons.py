@@ -1,6 +1,5 @@
 import unittest
 
-from agents.utils.files import recursive_scan
 from agents.utils.jsons import extract_json
 
 
@@ -21,7 +20,8 @@ class TestJsons(unittest.TestCase):
                 'create a Java class named User.java in that directory. The class should have fields for name and email'
                 ', a constructor to initialize these fields, and getter methods for both fields.", "new_tasks": []}'
                 '```')
-
+        print(text)
         result_dict = extract_json(text)
+        assert result_dict
         assert result_dict['instructions']
 

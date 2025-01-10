@@ -11,7 +11,7 @@ from agents.db.service.task_service import TaskService
 from agents.db.status import Status
 from agents.db.story import Story
 from agents.db.task import Task
-
+from agents.config import WORK_DIR
 
 class TestTaskPerformer(unittest.TestCase):
 
@@ -24,9 +24,11 @@ class TestTaskPerformer(unittest.TestCase):
         story_service = StoryService()
         self.story = Story(title="Restaurant CRUD.").save()
         self.task_performer = TaskPerformer(self.gemini_handler, TaskService(story_service), story_service)
-        self.task = Task(title="Title",
-                        specification="Create a service Java class on package com.restaurant for create User. "
-                                  "User has name and email. The project location is /home/joel/documents/restaurant/."
+        specification = ("Create a service Java class on package com.restaurant for create User. "
+                        f"User has name and email. The project location will be at {WORK_DIR}/restaurant.")
+
+        self.task = Task(title="Create Restaurant CRUD project",
+                        specification=specification
                         ).save()
 
     def test_perform(self):
@@ -34,7 +36,7 @@ class TestTaskPerformer(unittest.TestCase):
             "Create the User model implementation for authentication. User has name, address, birthdate, email. "
             "The project package "
             "is com.auth.gourmet.Restaurant. We are using maven and Java 17 with Spring boot 3."
-            "The project location is /home/joel/Documents/restaurant/."
+            f"The project location will be at {WORK_DIR}/restaurant. So, create the project and implement it."
         )
         task = Task(title="Title",
                     specification=specification)
