@@ -6,7 +6,7 @@ from agents.db.service.story_service import StoryService
 
 class AgentHandler:
 
-    def __init__(self, agent_switch: AgentSwitch,):
+    def __init__(self, agent_switch: AgentSwitch):
         self.agent_switch = agent_switch
         self.epic_service = EpicService()
         self.story_service = StoryService()
