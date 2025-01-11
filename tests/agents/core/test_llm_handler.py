@@ -1,10 +1,11 @@
 import json
+import os.path
 import unittest
 
 from agents.core.dto.llm_schema import BreakEpicIntoStoriesSchema, BreakStoryIntoTasksSchema, StorySchema, \
     BreakTaskIntoInstructionsSchema
 from agents.core.llm_handler import GeminiHandler
-from agents.config import GEMINI_API_KEY
+from agents.config import GEMINI_API_KEY, WORK_DIR
 from agents.core.performer.instruction_performer import InstructionPerformer
 
 
@@ -14,6 +15,9 @@ class TestGeminiHandler(unittest.TestCase):
     def setUpClass(self):
         self.gemini_handler = GeminiHandler(GEMINI_API_KEY)
         self.gemini_handler_2 = GeminiHandler(GEMINI_API_KEY)
+
+        print(f"aattempting to create: {WORK_DIR}")
+        os.makedirs(WORK_DIR, exist_ok=True)
 
     def test_generate_instructions_break_into_stories(self):
         prompt = ("Create a web server REST API for authentication."

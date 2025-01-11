@@ -8,6 +8,9 @@ class LLMHandler:
     def __init__(self):
         pass
 
+    def summary(self, prompt: str):
+        raise NotImplementedError("Summary not implemented")
+
     def generate_instructions(self, prompt: str, response_schema: any) -> str:
         raise NotImplementedError("This is an abstract class")
 
@@ -31,3 +34,6 @@ class GeminiHandler(LLMHandler):
 
         instructions_str = self.generate_instructions(prompt, response_schema)
         return extract_json(instructions_str)
+
+    def summary(self, prompt: str) -> str:
+        return self.model.generate_content(prompt).text

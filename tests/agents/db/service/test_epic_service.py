@@ -24,7 +24,7 @@ class TestDeviceChat(unittest.TestCase):
             description="Epic description",
             stories=None).save()
 
-        epic_list = self.epic_service.find_open()
+        epic_list = self.epic_service.find_by_status(Status.TODO)
         assert len(epic_list) == 1
 
     def test_find_open_progress(self):
@@ -33,17 +33,8 @@ class TestDeviceChat(unittest.TestCase):
             description="Epic description",
             stories=None).save()
 
-        epic_list = self.epic_service.find_open()
+        epic_list = self.epic_service.find_by_status(Status.IN_PROGRESS)
         assert len(epic_list) == 1
-
-    def test_find_open_done(self):
-        self.todo_epic = Epic(
-            status=Status.DONE,
-            description="Epic description",
-            stories=None).save()
-
-        epic_list = self.epic_service.find_open()
-        assert len(epic_list) == 0
 
     def test_create_stories(self):
         epic = Epic(
