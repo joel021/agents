@@ -12,7 +12,7 @@ class AgentHandler:
         self.story_service = StoryService()
         self.epic_service = epic_service
 
-    def execute_open_epics(self):
+    async def execute_open_epics(self):
 
         epic_performer = EpicPerformer(self.agent_switch, self.epic_service, self.story_service)
 
