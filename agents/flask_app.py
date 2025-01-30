@@ -25,7 +25,7 @@ def get_epic(id):
 
 @app.route('/epic/<id>', methods=['DELETE'])
 def delete_entity(id):
-    return epic_controller.delete_entity(id)
+    return epic_controller.delete_epic(id)
 
 @app.route('/agents/open_epocs', methods=['PUT'])
 def execute_open_epocs():
