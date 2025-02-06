@@ -1,0 +1,27 @@
+services:
+  mongo:
+    image: mongo
+    container_name: MONGO_DB_SERVER
+    restart: always
+    ports:
+      - ${MONGO_DB_PORT}:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PASSWORD}
+
+  mqtt-mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: MQTT_SERVER
+    restart: always
+    entrypoint: mosquitto -c /mosquitto-no-auth.conf
+    ports:
+      - ${MQTT_MOSQUITTO_TLS_PORT}:1883
+      - ${MQTT_MOSQUITTO_SOCKET_PORT}:9001
+
+  redis:
+    image: redis:7.2
+    container_name: REDIS_DB
+    restart: always
+    ports:
+      - ${REDIS_PORT}:6379
+
