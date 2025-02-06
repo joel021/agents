@@ -8,16 +8,9 @@ class EpicService:
     def find_by_status(self, status: Status):
         return Epic.objects(status=status)
 
-    def find_open(self) -> list[Epic]:
+    def create(self, epic: dict) -> Epic:
 
-        epic_list = self.find_by_status(Status.IN_PROGRESS)
-
-        if not epic_list:
-            epic_list = []
-
-        epic_list.extend(Epic.objects(status=Status.TODO))
-
-        return epic_list
+        return Epic.from_dict(epic).save()
 
     def add_stories(self, epic: Epic, stories: list[Story]) -> list[Story]:
 
@@ -38,3 +31,10 @@ class EpicService:
     def set_summary(self, epic: Epic, summary: str):
         epic.summary = summary
         return epic.save()
+
+    def find_by_id(self, id: str) -> Epic:
+        return Epic.objects.get(id=id)
+
+    def delete(self, id: str):
+
+        Epic.objects.get(id=id).delete()
