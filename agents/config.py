@@ -11,4 +11,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 WORK_DIR = os.getenv("WORK_DIR", "./work_dir")
-SINGLE_AGENTS = os.getenv("SINGLE_AGENTS", True)
+REDIS_CHANEL = os.getenv("REDIS_CHANNEL", "messages")
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+

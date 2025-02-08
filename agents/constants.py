@@ -1,0 +1,4 @@
+
+OPERATION_SYSTEM_AGENT_NAME = "Operation_System"
+PROJECT_MANAGER_AGENT_NAME = "Project_Manager"
+EVERYONE = "Everyone"

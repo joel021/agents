@@ -4,7 +4,7 @@ import mongomock
 from mongoengine import disconnect, connect
 
 from agents.core.agents_switch import AgentSwitch
-from agents.core.performer.task_performer import TaskPerformer
+from agents.core.task_performer import TaskPerformer
 from agents.db.service.story_service import StoryService
 from agents.db.service.task_service import TaskService
 from agents.db.status import Status

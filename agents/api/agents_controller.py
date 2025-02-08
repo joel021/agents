@@ -1,4 +1,4 @@
-from agents.core.agent_handler import AgentHandler
+from agents.core.pm_agent.agent_handler import AgentHandler
 
 
 class AgentsController:

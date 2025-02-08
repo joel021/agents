@@ -21,11 +21,10 @@ An example functions to subscribe and send messages using Redis library is as fo
 ```Python
 import redis
 from redis import Redis
-import time
 
 def listen_forever(r_connection: Redis, channel: str):
 
-    pubsub = r.pubsub()
+    pubsub = r_connection.pubsub()
     pubsub.subscribe(channel)
 
     for message in pubsub.listen():

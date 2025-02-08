@@ -1,7 +1,5 @@
 from agents.core.agents_switch import AgentSwitch
-from agents.core.dto.llm_schema import BreakTaskIntoInstructionsSchema
-from agents.core.performer.instruction_performer import InstructionPerformer
-from agents.core.instructions_handler import InstructionsHandler
+from agents.core.os_agent.operation_system_agent import OperationSystemAgent
 from agents.core.dto.response import Response
 from agents.core.planner import Planner
 from agents.db.service.story_service import StoryService
@@ -16,7 +14,7 @@ class TaskPerformer:
     def __init__(self, agent_switch: AgentSwitch, task_service: TaskService, story_service: StoryService):
         self.task_service = task_service
         self.story_service = story_service
-        self.instructions_handler = InstructionsHandler()
+        self.instructions_handler = OperationSystemAgent()
         self.planner = Planner(agent_switch.get_llm_agent(), story_service)
 
     def execute_instructions_dynamically(self, task: Task, story_id: str, initial_instructions: list,

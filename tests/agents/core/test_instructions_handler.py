@@ -1,7 +1,7 @@
 import unittest
 
 from agents.core.dto.llm_schema import ArgumentSchema
-from agents.core.instructions_handler import InstructionsHandler
+from agents.core.os_agent.operation_system_agent import OperationSystemAgent
 
 
 class TestGeminiHandler(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestGeminiHandler(unittest.TestCase):
         pass
 
     def test_convert_to_dict(self):
-        instruction_handler = InstructionsHandler()
+        instruction_handler = OperationSystemAgent()
 
         args = [ArgumentSchema(arg="arg1", value="value"),
                 ArgumentSchema(arg="arg2", value="value"),
@@ -22,7 +22,7 @@ class TestGeminiHandler(unittest.TestCase):
 
     def test_execute_instruction(self):
 
-        instruction_handler = InstructionsHandler()
+        instruction_handler = OperationSystemAgent()
         instructions = {
                 "function_name": "execute_terminal",
                 "arguments": [

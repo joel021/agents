@@ -1,9 +1,10 @@
 import google.generativeai as genai
 
+from agents.config import GEMINI_API_KEY, GPT_API_KEY
 from agents.utils.jsons import extract_json
 
 
-class LLMHandler:
+class LLMReasoner:
 
     def __init__(self):
         pass
@@ -11,29 +12,38 @@ class LLMHandler:
     def summary(self, prompt: str):
         raise NotImplementedError("Summary not implemented")
 
-    def generate_instructions(self, prompt: str, response_schema: any) -> str:
+    def reason(self, prompt: str, response_schema: any) -> str:
         raise NotImplementedError("This is an abstract class")
 
-    def generate_instructions_dict(self, prompt: str, response_schema: any) -> dict:
+    def reason_dict(self, prompt: str, response_schema: any) -> dict:
         raise NotImplementedError("This is an abstract class")
 
 
-class GeminiHandler(LLMHandler):
+class GeminiReasoner(LLMReasoner):
 
     def __init__(self, api_key: str) -> None:
         super().__init__()
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel("gemini-1.5-flash")
 
-    def generate_instructions(self, prompt: str, response_schema) -> str:
+    def reason(self, prompt: str, response_schema) -> str:
         return self.model.generate_content(prompt, generation_config=genai.GenerationConfig(
             response_mime_type="application/json", response_schema=response_schema
         ),).text
 
-    def generate_instructions_dict(self, prompt: str, response_schema) -> dict:
+    def reason_dict(self, prompt: str, response_schema) -> dict:
 
-        instructions_str = self.generate_instructions(prompt, response_schema)
+        instructions_str = self.reason(prompt, response_schema)
         return extract_json(instructions_str)
 
     def summary(self, prompt: str) -> str:
         return self.model.generate_content(prompt).text
+
+
+def get_new_llm_reasoner():
+    if GEMINI_API_KEY:
+        return GeminiReasoner(GEMINI_API_KEY)
+    elif GPT_API_KEY:
+        raise NotImplementedError("Gpt interfaces were not implemented yet.")
+
+    raise NotImplementedError("No other options unless Gemini are available. Fill the GEMINI_API_KEY value.")

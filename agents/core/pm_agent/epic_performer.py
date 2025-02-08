@@ -1,8 +1,8 @@
 from agents.config import GEMINI_API_KEY
 from agents.core.agents_switch import AgentSwitch
 from agents.core.dto.llm_schema import BreakEpicIntoStoriesSchema
-from agents.core.llm_handler import GeminiHandler, LLMHandler
-from agents.core.performer.story_performer import StoryPerformer
+from agents.core.llm_reasoner import GeminiReasoner, LLMReasoner
+from agents.core.pm_agent.story_performer import StoryPerformer
 from agents.db.epic import Epic
 from agents.db.service.epic_service import EpicService
 from agents.db.service.story_service import StoryService
@@ -23,7 +23,7 @@ class EpicPerformer:
         prompt = (f"You are a software engineer specialist. Using scrum methodology for development. Break the "
                   f"following Epic into stories and put in new_stories: {epic.description}.")
 
-        resp_dict = self.llm_handler.generate_instructions_dict(prompt, BreakEpicIntoStoriesSchema)
+        resp_dict = self.llm_handler.reason_dict(prompt, BreakEpicIntoStoriesSchema)
         self.epic_service.add_stories(epic, resp_dict.get("new_stories", []))
         return self.epic_service.set_summary(epic, resp_dict.get("summary", ""))
 
