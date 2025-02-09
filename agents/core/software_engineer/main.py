@@ -1,5 +1,7 @@
 import google.generativeai as genai
 import os
+from MODEL_SETTINGS import MODEL_NAME, SAFETY_SETTINGS
+from INPUT_PROMPTS import create_prompts_prompt, review_code_prompt
 
 # Configure the Gemini API key and model settings.
 # GOOGLE_API_KEY = os.getenv("AIzaSyBgTdZNlXRyk0ZFm8Af9kw4x82Y4c0Xixg")  # Set your API key in the environment variable
@@ -9,31 +11,14 @@ if not GOOGLE_API_KEY:
 
 genai.configure(api_key=GOOGLE_API_KEY)
 
-MODEL_NAME = 'gemini-1.0-pro'  # Adjust as needed
-SAFETY_SETTINGS = [
-    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}
-]
-
 class SoftwareEngineer:
     def __init__(self, name="Software Engineer", expertise="Full-stack"):
         self.name = name
         self.expertise = expertise
         self.model = genai.GenerativeModel(MODEL_NAME, safety_settings=SAFETY_SETTINGS)
 
-    def review_code_from_developer(self, code, task_description, project_context):
-        prompt = f"""You are a senior software engineer reviewing code produced by a junior developer. Your role is to provide constructive feedback focusing on code quality, potential bugs, and adherence to best practices.
-        
-Task Description: {task_description}
-
-Project Context: {project_context}
-
-Code to Review:
-{code}
-
-Provide your feedback concisely, without rewriting the code."""
+    def review_code_from_developer(self, code):
+        prompt = review_code_prompt(task, code)
         response = self.model.generate_content(prompt)
         return response.text
 
@@ -116,12 +101,7 @@ What is your decision?
         return response.text
     
     def create_prompts(self, project_state, task):
-        se_prompt = f"""You're a senior software engineer responsible for using a generative LLM code generator to resolve tasks assigned to you.
-        Right now, you have to resolve the following task: {task['title']}
-        This is its description: {task['description']}
-        Each prompt and corresponding generated code will be back and forth untill you're satisfied with the prompt's output.
-        Please, generate a prompt or a list of prompts to resolve that task completely. Output prompts only, each in its own line for easier extraction.
-        """
+        se_prompt = create_prompts_prompt(task)
         response = self.model.generate_content(se_prompt)
         return response.text
 
@@ -143,19 +123,17 @@ if __name__ == '__main__':
     'description': (
         'Create a Python function that multiplies two matrices. '
         'The function should first validate the dimensions, then perform the multiplication, '
-        'and finally return the resulting matrix. Generate separate prompts for each step: '
-        'validation, multiplication, and formatting the result.'
+        'and finally return the resulting matrix.'
     )
 }
-    decision = engineer.create_prompts(project_state, task)
-    prompts = decision.split('\n')
-    print("Decision for Resolve Tasks:\n", decision)
+    se_prompt = engineer.create_prompts(project_state, task)
+    print("Decision for create_prompts:\n", se_prompt)
 
     model = genai.GenerativeModel(MODEL_NAME, safety_settings=SAFETY_SETTINGS)
-    for prompt in prompts:
-        #placeholder for DS
-        response = model.generate_content(prompt)
-        print(response.text)
+    #for prompt in prompts:
+    #placeholder for DS
+    response = model.generate_content(se_prompt)
+    print(response.text)
 
     # You can uncomment and test other methods as needed:
     # review_feedback = engineer.review_code_from_developer(code_snippet, "Calculate sum function", "Math utility module")
