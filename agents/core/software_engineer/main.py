@@ -157,7 +157,6 @@ if __name__ == '__main__':
         response = model.generate_content(prompt)
         print(response.text)
 
-
     # You can uncomment and test other methods as needed:
     # review_feedback = engineer.review_code_from_developer(code_snippet, "Calculate sum function", "Math utility module")
     # print("\nCode Review Feedback:\n", review_feedback)
