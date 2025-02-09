@@ -18,7 +18,7 @@ class TestOperationSystemAgent(unittest.TestCase):
     def test_reason_create_file(self):
 
         redis_instance, pubsub = get_redis_conn()
-        os_instruction_handler = OperationSystemAgent(get_new_llm_reasoner(), redis_instance)
+        os_system_agent = OperationSystemAgent(get_new_llm_reasoner(), redis_instance)
 
         message = Message(
             sender=PROJECT_MANAGER_AGENT_NAME,
@@ -27,7 +27,7 @@ class TestOperationSystemAgent(unittest.TestCase):
                     f"print('Hello World!')",
             data=None
         )
-        performed = os_instruction_handler.reason(message.to_dict())
+        performed = os_system_agent.reason(message.to_dict())
 
         assert performed, "Performed without errors."
 
