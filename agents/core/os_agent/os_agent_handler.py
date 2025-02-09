@@ -3,7 +3,7 @@ from agents.constants import OPERATION_SYSTEM_AGENT_NAME
 from agents.core.llm_reasoner import get_new_llm_reasoner
 from agents.core.os_agent.operation_system_agent import OperationSystemAgent
 from agents.utils.jsons import decode_message
-from agents.utils.redis_utils import get_redis_conn
+from agents.core.actuator.redis_comm import get_redis_conn
 
 
 def start_os_agent():

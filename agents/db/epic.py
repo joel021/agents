@@ -15,7 +15,7 @@ class Epic(Document):
 
     @staticmethod
     def from_dict(data: dict):
-        Status
+
         epic = Epic(title=data.get("title", None),
                     status=Status.from_keyword(data.get("status", None)),
                     description=data.get("description", None),
@@ -26,8 +26,9 @@ class Epic(Document):
     def to_dict(self):
 
         return {
+            "id": self.id,
             "title": self.title,
-            "status": str(self.status).upper(),
+            "status": str(self.status.name),
             "description": self.description,
             "summary": self.summary,
             "stories": entity_list_to_dict_list(self.stories),

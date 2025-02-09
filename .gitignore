@@ -162,3 +162,4 @@ cython_debug/
 #.idea/
 poetry.lock
 work_dir
+tests.ipynb

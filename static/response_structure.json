@@ -2,10 +2,12 @@
   "instructions": [
     {
       "function": "function_name",
-      "args": {
-        "arg1":"v1",
-        "arg2":"v2"
-      }
+      "arguments": [
+        {
+          "arg": "argument_name",
+          "value":"value of the argument"
+        }
+      ]
     },
     ...
   ],

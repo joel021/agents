@@ -1,5 +1,5 @@
 from agents.utils.files import scan_project, create_file, update_file, read_file
-from agents.utils.system_os import execute_terminal
+from agents.core.actuator.system_os import execute_terminal
 
 
 class OsInstructions:
