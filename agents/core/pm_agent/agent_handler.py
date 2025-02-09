@@ -1,14 +1,14 @@
-from agents.core.agents_switch import AgentSwitch
-from agents.core.performer.epic_performer import EpicPerformer
+from agents.core.llm_reasoner import LLMReasoner
+from agents.core.pm_agent.epic_performer import EpicPerformer
 from agents.db.service.epic_service import EpicService
 from agents.db.service.story_service import StoryService
 from agents.db.status import Status
 
 
-class AgentHandler:
+class ProjectManagerAgent:
 
-    def __init__(self, epic_service: EpicService, agent_switch: AgentSwitch):
-        self.agent_switch = agent_switch
+    def __init__(self, epic_service: EpicService, llm_reasoner: LLMReasoner):
+        self.llm_reasoner = llm_reasoner
         self.story_service = StoryService()
         self.epic_service = epic_service
 

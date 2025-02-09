@@ -1,8 +1,8 @@
 
-from agents.core.dto.llm_schema import BreakTaskIntoInstructionsSchema
+from agents.core.dto.llm_schema import GenerateOSInstructionsSchema
 from agents.core.dto.response import Response
-from agents.core.llm_handler import LLMHandler
-from agents.core.performer.instruction_performer import InstructionPerformer
+from agents.core.llm_reasoner import LLMReasoner
+from agents.core.pm_agent.instruction_performer import InstructionPerformer
 from agents.db.service.story_service import StoryService
 from agents.db.task import Task
 from agents.utils.strs import instruction_to_str
@@ -10,7 +10,7 @@ from agents.utils.strs import instruction_to_str
 
 class Planner:
 
-    def __init__(self, llm_handler: LLMHandler, story_service: StoryService):
+    def __init__(self, llm_handler: LLMReasoner, story_service: StoryService):
 
         self.llm_handler = llm_handler
         self.story_service = story_service
@@ -23,8 +23,8 @@ class Planner:
             f'Break it down into more tasks, in new_tasks, if the task is too complex. '
             f'We have completed: {summary}'
         )
-        instructions_dict = self.llm_handler.generate_instructions_dict(prompt,
-                                                                        BreakTaskIntoInstructionsSchema)
+        instructions_dict = self.llm_handler.reason_dict(prompt,
+                                                         GenerateOSInstructionsSchema)
         return instructions_dict
 
     def replan(self, task: Task, results: list[Response], instructions: list[dict],
@@ -52,7 +52,7 @@ class Planner:
                          f'Bring a summary to help another developer continue the work.'
             f'The available instructions/functions are: {InstructionPerformer.get_available_instructions_str()}.')
 
-        return self.llm_handler.generate_instructions_dict(replan_prompt, BreakTaskIntoInstructionsSchema)
+        return self.llm_handler.reason_dict(replan_prompt, GenerateOSInstructionsSchema)
 
     def _update_instructions_and_summary(self, feedback: dict, instructions, story_id, summary):
         """Update instructions and summary based on feedback."""

@@ -4,7 +4,7 @@ import mongomock
 from mongoengine import disconnect, connect
 
 from agents.core.agents_switch import AgentSwitch
-from agents.core.performer.task_performer import TaskPerformer
+from agents.core.os_agent.instructions_performer import InstructionsPerformer
 from agents.db.service.story_service import StoryService
 from agents.db.service.task_service import TaskService
 from agents.db.status import Status
@@ -23,7 +23,7 @@ class TestTaskPerformer(unittest.TestCase):
         self.agents_switch = AgentSwitch(SINGLE_AGENTS)
         story_service = StoryService()
         self.story = Story(title="Restaurant CRUD.").save()
-        self.task_performer = TaskPerformer(self.agents_switch, TaskService(story_service), story_service)
+        self.task_performer = InstructionsPerformer(self.agents_switch, TaskService(story_service), story_service)
 
     def test_perform(self):
         specification = (

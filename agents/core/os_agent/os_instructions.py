@@ -2,7 +2,7 @@ from agents.utils.files import scan_project, create_file, update_file, read_file
 from agents.utils.system_os import execute_terminal
 
 
-class InstructionPerformer:
+class OsInstructions:
 
     def __init__(self):
         self.actions = {
@@ -44,4 +44,4 @@ class InstructionPerformer:
 
     @staticmethod
     def get_available_instructions_str():
-        return str(InstructionPerformer().actions).replace("'", "\"").replace(" ", "")
+        return str(OsInstructions().actions).replace("'", "\"").replace(" ", "")

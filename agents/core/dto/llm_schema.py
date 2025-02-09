@@ -59,7 +59,9 @@ class BreakStoryIntoTasksSchema(typing.TypedDict):
         self.new_tasks = new_tasks
 
 
-class BreakTaskIntoInstructionsSchema(typing.TypedDict):
+class GenerateOSInstructionsSchema(typing.TypedDict):
+
+    valid: bool
     instructions: typing.List[InstructionSchema]
     summary: str
     next_tasks: typing.List[TaskSchema]

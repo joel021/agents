@@ -1,6 +1,5 @@
 from agents.core.agents_switch import AgentSwitch
-from agents.core.llm_handler import LLMHandler
-from agents.core.performer.task_performer import TaskPerformer
+from agents.core.os_agent.instructions_performer import InstructionsPerformer
 from agents.db.service.story_service import StoryService
 from agents.db.service.task_service import TaskService
 from agents.db.status import Status
@@ -14,7 +13,7 @@ class StoryPerformer:
         self.gemini_handler = agent_switch.get_llm_agent()
         self.story_service = story_service
         self.task_service = TaskService(story_service)
-        self.task_performer = TaskPerformer(agent_switch, self.task_service, story_service)
+        self.task_performer = InstructionsPerformer(agent_switch, self.task_service, story_service)
 
     def breakdown_into_tasks(self, story: Story) -> Story:
 
@@ -22,7 +21,7 @@ class StoryPerformer:
                   'have done", "new_tasks": [{"title": "...", "specification": "..."}, ...]}```. Thinking about scrum '
                   f'methodology, break down the following Story into tasks and put in new_stories: {story.description}')
 
-        resp_dict = self.gemini_handler.generate_instructions_dict(prompt)
+        resp_dict = self.gemini_handler.reason_dict(prompt)
         new_tasks = resp_dict.get("new_tasks", [])
         self.story_service.create_tasks(story, new_tasks)
         return self.story_service.set_summary(story, resp_dict.get("summary", ""))
@@ -31,7 +30,7 @@ class StoryPerformer:
 
         prompt = ('Answer in the following format: ```{"summary": "text summarization without break line"}```. '
                   f'Summarize the following text: `{summary}`')
-        return self.gemini_handler.generate_instructions_dict(prompt).get("summary", summary)
+        return self.gemini_handler.reason_dict(prompt).get("summary", summary)
 
     def perform(self, story: Story, summary: str) -> Story:
 
