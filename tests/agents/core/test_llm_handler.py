@@ -2,14 +2,11 @@ import json
 import os.path
 import unittest
 
-from agents.core.actuator.actions_performer import ActionsPerformer
-from agents.core.actuator.class_inspector import get_class_description
 from agents.core.dto.llm_schema import BreakEpicIntoStoriesSchema, BreakStoryIntoTasksSchema, StorySchema, \
     GenerateOSActionsSchema
 from agents.core.llm_reasoner import GeminiReasoner
 from agents.config import GEMINI_API_KEY, WORK_DIR
 from agents.core.os_agent.os_instructions import OsInstructions
-from agents.db.service.epic_service import EpicService
 
 
 class TestGeminiHandler(unittest.TestCase):

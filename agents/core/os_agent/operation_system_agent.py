@@ -4,7 +4,7 @@ from agents.constants import OPERATION_SYSTEM_AGENT_NAME
 from agents.core.dto.llm_schema import GenerateOSActionsSchema
 from agents.core.dto.response import Response
 from agents.core.llm_reasoner import LLMReasoner
-from agents.core.message import Message
+from agents.core.dto.message_dto import MessageDTO
 from agents.core.actuator.actions_performer import ActionsPerformer
 from agents.core.os_agent.os_instructions import OsInstructions
 from agents.core.actuator.redis_comm import publish_message
@@ -20,7 +20,7 @@ class OperationSystemAgent:
 
     def send_message(self, recipient: str, message: str):
 
-        message_dict = Message(
+        message_dict = MessageDTO(
             sender=OPERATION_SYSTEM_AGENT_NAME,
             recipient=recipient,
             message=message,
