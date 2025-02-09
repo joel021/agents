@@ -14,4 +14,5 @@ WORK_DIR = os.getenv("WORK_DIR", "./work_dir")
 REDIS_CHANEL = os.getenv("REDIS_CHANNEL", "messages")
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+WIKIPEDIA_API_KEY = os.getenv("WIKIPEDIA_API_KEY",None)
 
