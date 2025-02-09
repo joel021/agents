@@ -21,15 +21,15 @@ class ActionsPerformer:
 
         while actions:
             action = actions.pop(0)
-            current_result = self._execute_single_instruction(action, results, performed_instructions)
+            current_result = self._execute_single(action, results, performed_instructions)
 
-            if current_result.error:
+            if isinstance(current_result, Response) and current_result.error:
                 logger.error(current_result.msg)
                 break
 
         return results, current_result
 
-    def _execute_single_instruction(self, action: dict, results: list[dict], performed_instructions: list[dict]) -> Response:
+    def _execute_single(self, action: dict, results: list[dict], performed_instructions: list[dict]) -> Response:
         """Execute a single instruction and log the result."""
         current_result = execute_function(action, self.actions)
         results.append({
@@ -39,7 +39,7 @@ class ActionsPerformer:
 
         print(f"Executing action: {action}\n result: {current_result}")
 
-        if not current_result.error:
+        if not isinstance(current_result, Response) or not current_result.error:
             performed_instructions.append(action)
 
         return current_result

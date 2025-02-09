@@ -15,6 +15,10 @@ class TestOperationSystemAgent(unittest.TestCase):
     def setUpClass(self):
         os.makedirs(f"{WORK_DIR}/test", exist_ok=True)
 
+    @classmethod
+    def tearDownClass(self):
+        os.remove(f"{WORK_DIR}/test/new_file.py")
+
     def test_reason_create_file(self):
 
         redis_instance, pubsub = get_redis_conn()

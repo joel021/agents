@@ -1,5 +1,5 @@
 from agents.core.agents_switch import AgentSwitch
-from agents.core.actuator.action_performer import ActionsPerformer
+from agents.core.actuator.actions_performer import ActionsPerformer
 from agents.db.service.story_service import StoryService
 from agents.db.service.task_service import TaskService
 from agents.db.status import Status

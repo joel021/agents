@@ -52,7 +52,7 @@ def execute_function(action_dict: dict, available_functions: dict) -> Response:
 
     function_name = action_dict.get("function_name", None)
     if not function_name:
-        return Response(f"Only use the provided set of possible instructions.", True)
+        return Response(f"function_name not provided in the request. Probably the schema is wrong.", True)
 
     function_callable = available_functions.get(function_name, {}).get("function", None)
     if not function_callable:

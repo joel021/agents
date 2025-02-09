@@ -1,7 +1,7 @@
 from redis import Redis
 
 from agents.constants import PROJECT_MANAGER_AGENT_NAME, USER_NAME, AGENTS_DESCRIPTIONS
-from agents.core.actuator.action_performer import ActionsPerformer
+from agents.core.actuator.actions_performer import ActionsPerformer
 from agents.core.dto.response import Response
 from agents.core.llm_reasoner import LLMReasoner
 from agents.core.message import Message
@@ -16,7 +16,7 @@ class ProjectManagerAgent:
         self.llm_reasoner = llm_reasoner
         self.database_handler = database_handler
         self.redis_connection = redis_connection
-        self.instructions_performer = ActionsPerformer(self.database_handler.epic_available_actions)
+        self.instructions_performer = ActionsPerformer(self.database_handler.available_actions)
 
     def _command_agents(self, command_result: dict):
 

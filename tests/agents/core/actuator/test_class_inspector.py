@@ -1,6 +1,7 @@
 import unittest
 
-from agents.core.actuator.class_inspector import get_class_description, execute_function
+from agents.core.actuator.class_inspector import get_class_description, execute_function, convert_to_dict
+from agents.core.dto.llm_schema import ArgumentSchema
 
 
 class ClassToBeTested:
@@ -53,3 +54,12 @@ class TestActions(unittest.TestCase):
         }
         result = execute_function(action_dict, available_functions)
         assert result == 3
+
+    def test_convert_to_dict(self):
+
+        args = [ArgumentSchema(arg="arg1", value="value"),
+                ArgumentSchema(arg="arg2", value="value"),
+                ArgumentSchema(arg="arg3", value="value")]
+        args_dict = convert_to_dict(args)
+
+        assert args_dict['arg1']

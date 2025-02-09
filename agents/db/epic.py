@@ -26,8 +26,9 @@ class Epic(Document):
     def to_dict(self):
 
         return {
+            "id": self.id,
             "title": self.title,
-            "status": str(self.status).upper(),
+            "status": str(self.status.name),
             "description": self.description,
             "summary": self.summary,
             "stories": entity_list_to_dict_list(self.stories),
