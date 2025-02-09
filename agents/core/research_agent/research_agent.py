@@ -2,6 +2,7 @@ from redis import Redis
 from agents.constants import PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_NAME, RESEARCH_AGENT_NAME
 from agents.core.dto.response import Response
 from agents.core.dto.message_dto import MessageDTO
+from agents.core.llm_reasoner import LLMReasoner
 from agents.core.actuator.redis_comm import publish_message
 from agents.utils.web import search_web 
 
@@ -10,7 +11,8 @@ class ResearchAgent:
 
     ALLOWED_SENDERS = {PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_NAME}
 
-    def __init__(self, redis_instance: Redis):
+    def __init__(self, llm: LLMReasoner,redis_instance: Redis):
+        self.llm = llm
         self.redis_instance = redis_instance
 
     def send_message(self, recipient: str, message: str, data: dict=None):
@@ -39,8 +41,11 @@ class ResearchAgent:
             return False
         else:
             response = Response(msg=f"Results for query: {query}", error=False)
-            
-            response.data = results
+
+            formatted_results = "\n".join([f"{r['title']}: {r['snippet']}" for r in results])
+            summarized_results = self.llm.simple_answer(formatted_results)
+            response.data = summarized_results
+
         resp = f"{response.msg}"
         data = {
             "action": "research",
