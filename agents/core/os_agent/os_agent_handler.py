@@ -8,7 +8,7 @@ from agents.utils.redis_utils import get_redis_conn
 
 def start_os_agent():
 
-    redis_instance, pubsub = get_redis_conn(OPERATION_SYSTEM_AGENT_NAME)
+    redis_instance, pubsub = get_redis_conn()
     os_instruction_handler = OperationSystemAgent(get_new_llm_reasoner(), redis_instance)
 
     for message in pubsub.listen():

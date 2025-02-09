@@ -2,7 +2,8 @@ import json
 
 from redis import Redis
 
-from agents.config import OPERATION_SYSTEM_AGENT_NAME, REDIS_CHANEL
+from agents.config import REDIS_CHANEL
+from agents.constants import OPERATION_SYSTEM_AGENT_NAME
 from agents.core.dto.llm_schema import ArgumentSchema, GenerateOSInstructionsSchema
 from agents.core.dto.response import Response
 from agents.core.llm_reasoner import LLMReasoner
@@ -33,7 +34,7 @@ class OperationSystemAgent:
 
     def reason(self, message: dict):
 
-        if not message['recipient'] == OPERATION_SYSTEM_AGENT_NAME:
+        if not message or not message.get('recipient', None) == OPERATION_SYSTEM_AGENT_NAME:
             return
 
         prompt = f"You are a Ubuntu specialist and you are in a group of your team. {message['sender']} have sent" \
