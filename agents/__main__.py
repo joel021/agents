@@ -34,7 +34,7 @@ def main():
 
     start_parallel_processes(processes)
 
-    #the last process is the User agent, it must be executed in the main thread, to allow the user inputs
+    #The last process is the User agent. It must be executed in the main thread to allow the user inputs.
     start_user_interaction()
 
 if __name__ == "__main__":

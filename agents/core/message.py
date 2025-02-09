@@ -1,7 +1,7 @@
 
 class Message:
 
-    def __init__(self, sender: str, recipient: str, message: str, data: dict = None):
+    def __init__(self, sender: str=None, recipient: str=None, message: str=None, data: dict = None):
         self.sender = sender
         self.recipient = recipient
         self.message = message
