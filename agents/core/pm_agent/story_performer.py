@@ -1,5 +1,5 @@
 from agents.core.agents_switch import AgentSwitch
-from agents.core.task_performer import TaskPerformer
+from agents.core.os_agent.instructions_performer import InstructionsPerformer
 from agents.db.service.story_service import StoryService
 from agents.db.service.task_service import TaskService
 from agents.db.status import Status
@@ -13,7 +13,7 @@ class StoryPerformer:
         self.gemini_handler = agent_switch.get_llm_agent()
         self.story_service = story_service
         self.task_service = TaskService(story_service)
-        self.task_performer = TaskPerformer(agent_switch, self.task_service, story_service)
+        self.task_performer = InstructionsPerformer(agent_switch, self.task_service, story_service)
 
     def breakdown_into_tasks(self, story: Story) -> Story:
 
