@@ -32,7 +32,7 @@ class ResearchAgent:
             return False
         
         query = message['message']
-        results = search_web(query)  
+        results = search_web(query)
         
         if not results:
             response = Response(msg=f"No relevant results found for query: {query}", error=True)
@@ -41,11 +41,13 @@ class ResearchAgent:
             return False
         else:
             response = Response(msg=f"Results for query: {query}", error=False)
+            
             response.data = results
         resp = f"{response.msg}"
         data = {
             "action": "research",
             "query": query,
+            "results": response.data
         }
         self.send_message(message['sender'], resp, data)
         return True

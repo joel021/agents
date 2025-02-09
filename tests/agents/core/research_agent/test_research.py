@@ -26,7 +26,9 @@ class TestResearchAgent(unittest.TestCase):
             data=None
         )
         print("Message being sent to reason:", message.to_dict())
+        
         performed = research_agent.reason(message.to_dict())
+        print("Message being sent to reason:", performed)
 
         assert performed, "Performed without errors."
 
