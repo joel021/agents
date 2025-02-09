@@ -28,7 +28,7 @@ class ArgumentSchema(typing.TypedDict):
         self.value = value
 
 
-class InstructionSchema(typing.TypedDict):
+class FunctionSchema(typing.TypedDict):
     function_name: str
     arguments: typing.List[ArgumentSchema]
 
@@ -58,15 +58,12 @@ class BreakStoryIntoTasksSchema(typing.TypedDict):
         self.summary = summary
         self.new_tasks = new_tasks
 
-
-class GenerateOSInstructionsSchema(typing.TypedDict):
+class GenerateOSActionsSchema(typing.TypedDict):
 
     valid: bool
-    instructions: typing.List[InstructionSchema]
+    instructions: typing.List[FunctionSchema]
     summary: str
-    next_tasks: typing.List[TaskSchema]
 
-    def __init__(self, instructions: typing.List[InstructionSchema], summary: str, next_tasks: typing.List[TaskSchema]):
+    def __init__(self, instructions: typing.List[FunctionSchema], summary: str):
         self.instructions = instructions
         self.summary = summary
-        self.next_tasks = next_tasks

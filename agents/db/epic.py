@@ -15,7 +15,7 @@ class Epic(Document):
 
     @staticmethod
     def from_dict(data: dict):
-        Status
+
         epic = Epic(title=data.get("title", None),
                     status=Status.from_keyword(data.get("status", None)),
                     description=data.get("description", None),

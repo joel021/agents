@@ -6,7 +6,7 @@ from agents.constants import PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_
 from agents.core.llm_reasoner import get_new_llm_reasoner
 from agents.core.message import Message
 from agents.core.os_agent.operation_system_agent import OperationSystemAgent
-from agents.utils.redis_utils import get_redis_conn
+from agents.core.actuator.redis_comm import get_redis_conn
 
 
 class TestOperationSystemAgent(unittest.TestCase):

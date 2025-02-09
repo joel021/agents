@@ -1,5 +1,5 @@
 
-from agents.core.dto.llm_schema import GenerateOSInstructionsSchema
+from agents.core.dto.llm_schema import GenerateOSActionsSchema
 from agents.core.dto.response import Response
 from agents.core.llm_reasoner import LLMReasoner
 from agents.core.pm_agent.instruction_performer import InstructionPerformer
@@ -24,7 +24,7 @@ class Planner:
             f'We have completed: {summary}'
         )
         instructions_dict = self.llm_handler.reason_dict(prompt,
-                                                         GenerateOSInstructionsSchema)
+                                                         GenerateOSActionsSchema)
         return instructions_dict
 
     def replan(self, task: Task, results: list[Response], instructions: list[dict],
@@ -44,7 +44,7 @@ class Planner:
             'Summary the what have been done and explain encountered problem to help another '
                            'software engineering developer solve the problem and continue the task.'
         )
-        summary = self.llm_handler.summary(feedback_prompt)
+        summary = self.llm_handler.simple_answer(feedback_prompt)
         replan_prompt = ('You are a software engineering developer. '
                          f"Task specification: {task.specification}. "
                          f"{summary}"
@@ -52,7 +52,7 @@ class Planner:
                          f'Bring a summary to help another developer continue the work.'
             f'The available instructions/functions are: {InstructionPerformer.get_available_instructions_str()}.')
 
-        return self.llm_handler.reason_dict(replan_prompt, GenerateOSInstructionsSchema)
+        return self.llm_handler.reason_dict(replan_prompt, GenerateOSActionsSchema)
 
     def _update_instructions_and_summary(self, feedback: dict, instructions, story_id, summary):
         """Update instructions and summary based on feedback."""

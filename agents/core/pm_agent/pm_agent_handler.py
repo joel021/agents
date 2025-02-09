@@ -4,7 +4,7 @@ from agents.core.message import Message
 from agents.core.pm_agent.project_manager_agent import ProjectManagerAgent
 from agents.db.service.epic_service import EpicService
 from agents.utils.jsons import decode_message
-from agents.utils.redis_utils import get_redis_conn
+from agents.core.actuator.redis_comm import get_redis_conn
 
 
 def start_os_agent():

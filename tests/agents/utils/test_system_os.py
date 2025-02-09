@@ -1,7 +1,7 @@
 import unittest
 
 from agents.core.dto.response import Response
-from agents.utils.system_os import execute_terminal
+from agents.core.actuator.system_os import execute_terminal
 
 
 class TestSystemOs(unittest.TestCase):

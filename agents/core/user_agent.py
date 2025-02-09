@@ -6,7 +6,7 @@ from threading import Thread
 from agents.constants import USER_NAME, PROJECT_MANAGER_AGENT_NAME
 from agents.core.message import Message
 from agents.utils.jsons import decode_message
-from agents.utils.redis_utils import get_redis_conn, publish_message
+from agents.core.actuator.redis_comm import get_redis_conn, publish_message
 
 def listen(pubsub: PubSub, print_all: bool = True):
 

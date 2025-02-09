@@ -1,6 +1,7 @@
 import unittest
 
-from agents.utils.class_inspector import get_class_description
+from agents.core.actuator.class_inspector import get_class_description, execute_function
+
 
 class ClassToBeTested:
 
@@ -36,3 +37,19 @@ class TestActions(unittest.TestCase):
         dict_class = get_class_description(ClassToBeTested, class_to_be_tested_instance)
 
         assert dict_class['return_name']['function']() == name
+
+    def test_execute_action_sum(self):
+
+        name = "Name"
+        class_to_be_tested_instance = ClassToBeTested(name)
+        available_functions = get_class_description(ClassToBeTested, class_to_be_tested_instance)
+
+        action_dict = {
+            "function_name": "sum",
+            "arguments": [
+                {"arg": "a", "value": 1},
+                {"arg": "b", "value": 2},
+            ]
+        }
+        result = execute_function(action_dict, available_functions)
+        assert result == 3

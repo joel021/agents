@@ -15,4 +15,4 @@ REDIS_CHANEL = os.getenv("REDIS_CHANNEL", "messages")
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
 WIKIPEDIA_API_KEY = os.getenv("WIKIPEDIA_API_KEY",None)
-
+OPERATION_SYSTEM = os.getenv("OPERATION_SYSTEM", "Ubuntu 22.04")

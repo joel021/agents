@@ -3,7 +3,7 @@ from agents.constants import PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_
 from agents.core.dto.response import Response
 from agents.core.llm_reasoner import LLMReasoner
 from agents.core.message import Message
-from agents.utils.redis_utils import publish_message
+from agents.core.actuator.redis_comm import publish_message
 from agents.utils.web import search_web 
 
 

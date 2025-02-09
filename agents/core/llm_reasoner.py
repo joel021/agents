@@ -9,7 +9,7 @@ class LLMReasoner:
     def __init__(self):
         pass
 
-    def summary(self, prompt: str):
+    def simple_answer(self, prompt: str):
         raise NotImplementedError("Summary not implemented")
 
     def reason(self, prompt: str, response_schema: any) -> str:
@@ -36,7 +36,7 @@ class GeminiReasoner(LLMReasoner):
         instructions_str = self.reason(prompt, response_schema)
         return extract_json(instructions_str)
 
-    def summary(self, prompt: str) -> str:
+    def simple_answer(self, prompt: str) -> str:
         return self.model.generate_content(prompt).text
 
 

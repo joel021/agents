@@ -1,6 +1,6 @@
 import unittest
 
-from agents.core.dto.llm_schema import InstructionSchema
+from agents.core.dto.llm_schema import FunctionSchema
 
 
 class TestInstruction(unittest.TestCase):

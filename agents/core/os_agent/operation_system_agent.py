@@ -1,12 +1,12 @@
 from redis import Redis
 
 from agents.constants import OPERATION_SYSTEM_AGENT_NAME
-from agents.core.dto.llm_schema import GenerateOSInstructionsSchema
+from agents.core.dto.llm_schema import GenerateOSActionsSchema
 from agents.core.llm_reasoner import LLMReasoner
 from agents.core.message import Message
-from agents.core.os_agent.instructions_performer import InstructionsPerformer
+from agents.core.actuator.action_performer import ActionsPerformer
 from agents.core.os_agent.os_instructions import OsInstructions
-from agents.utils.redis_utils import publish_message
+from agents.core.actuator.redis_comm import publish_message
 
 
 class OperationSystemAgent:
@@ -15,7 +15,7 @@ class OperationSystemAgent:
         self.os_instructions = OsInstructions()
         self.llm = llm
         self.redis_instance = redis_instance
-        self.instructions_performer = InstructionsPerformer(llm, self.os_instructions)
+        self.instructions_performer = ActionsPerformer(self.os_instructions.actions)
 
     def send_message(self, recipient: str, message: str):
 
@@ -37,12 +37,12 @@ class OperationSystemAgent:
         f"{self.os_instructions.get_available_instructions_str()}. If the request is not valid, answer setting" \
         f"```valid:False```. "
 
-        llm_answer = self.llm.reason_dict(prompt, GenerateOSInstructionsSchema)
+        llm_answer = self.llm.reason_dict(prompt, GenerateOSActionsSchema)
         instructions = llm_answer.get('instructions', [])
 
         answer = None
         if llm_answer.get('valid', False):
-            answer = self.instructions_performer.execute_instructions(instructions)
+            answer = self.instructions_performer.execute_actions(instructions)
 
         if not answer:
             resp = (f"I could not attend to the message: {message['message']} ."
