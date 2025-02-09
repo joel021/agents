@@ -1,7 +1,13 @@
+from redis import Redis
+from agents.core.llm_reasoner import LLMReasoner
 import google.generativeai as genai
+from agents.core.dto.llm_schema import GenerateOSInstructionsSchema
+from agents.constants import SOFTWARE_ENGINEER_AGENT_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
 import os
-from MODEL_SETTINGS import MODEL_NAME, SAFETY_SETTINGS
+from model_settings import MODEL_NAME, SAFETY_SETTINGS
 from INPUT_PROMPTS import create_prompts_prompt, review_code_prompt
+from agents.utils.redis_utils import publish_message
+from agents.core.message import Message
 
 # Configure the Gemini API key and model settings.
 # GOOGLE_API_KEY = os.getenv("AIzaSyBgTdZNlXRyk0ZFm8Af9kw4x82Y4c0Xixg")  # Set your API key in the environment variable
@@ -12,70 +18,20 @@ if not GOOGLE_API_KEY:
 genai.configure(api_key=GOOGLE_API_KEY)
 
 class SoftwareEngineer:
-    def __init__(self, name="Software Engineer", expertise="Full-stack"):
-        self.name = name
-        self.expertise = expertise
+    def __init__(self, llm: LLMReasoner, redis_instance: Redis):
         self.model = genai.GenerativeModel(MODEL_NAME, safety_settings=SAFETY_SETTINGS)
+    
+    def send_message(self, recipient: str, message: str):
+
+        message_dict = Message(
+            sender=SOFTWARE_ENGINEER_AGENT_NAME,
+            recipient=recipient,
+            message=message,
+        ).to_dict()
+        publish_message(self.redis_instance, message_dict)
 
     def review_code_from_developer(self, code):
         prompt = review_code_prompt(task, code)
-        response = self.model.generate_content(prompt)
-        return response.text
-
-    def suggest_testing_strategy(self, task_description, code_design, project_context):
-        prompt = f"""You are a senior software engineer advising on testing strategies for a new feature.
-        
-Task Description: {task_description}
-
-Code Design: {code_design}
-
-Project Context: {project_context}
-
-Suggest a comprehensive testing strategy (unit tests, integration tests, etc.) with specific test cases to consider."""
-        response = self.model.generate_content(prompt)
-        return response.text
-
-    def identify_potential_risks(self, task_description, proposed_solution, project_context):
-        prompt = f"""You are a senior software engineer tasked with identifying potential technical risks for a proposed solution.
-        
-Task Description: {task_description}
-
-Proposed Solution: {proposed_solution}
-
-Project Context: {project_context}
-
-List potential technical risks and propose mitigation strategies."""
-        response = self.model.generate_content(prompt)
-        return response.text
-
-    def advise_on_best_practices(self, area_of_concern, project_context):
-        prompt = f"""You are a senior software engineer providing advice on best practices regarding {area_of_concern}.
-        
-Project Context: {project_context}
-
-Offer concise and practical recommendations with examples where applicable."""
-        response = self.model.generate_content(prompt)
-        return response.text
-
-    def clarify_requirements(self, requirement, project_context):
-        prompt = f"""You are a senior software engineer seeking clarification on a project requirement.
-        
-Requirement: {requirement}
-
-Project Context: {project_context}
-
-List clarifying questions to ensure the requirement is fully understood, considering edge cases and potential implementation challenges."""
-        response = self.model.generate_content(prompt)
-        return response.text
-
-    def estimate_complexity(self, task_description, project_context):
-        prompt = f"""You are a senior software engineer estimating the complexity of a task.
-        
-Task Description: {task_description}
-
-Project Context: {project_context}
-
-Estimate the complexity (low, medium, high) and provide a rough time estimate. Explain your reasoning briefly."""
         response = self.model.generate_content(prompt)
         return response.text
 
@@ -99,11 +55,32 @@ What is your decision?
 """
         response = self.model.generate_content(prompt)
         return response.text
-    
-    def create_prompts(self, project_state, task):
+
+    def create_prompts(self, task):
         se_prompt = create_prompts_prompt(task)
         response = self.model.generate_content(se_prompt)
         return response.text
+    
+    def reason(self, message: dict) -> bool:
+        if not message or not message.get('recipient', None) == SOFTWARE_ENGINEER_AGENT_NAME:
+            print("Empty message or incorrect recipient")
+            return False
+        
+        task_id = message['message']
+        task = self.task_service.get_by_id(task_id)
+
+        prompt = self.create_prompts(task)
+
+        if prompt:
+            self.send_message(DEVELOPER_SPECIALIST_AGENT_NAME, prompt)
+            return False
+        else:
+            resp = (
+                f"I could not attend to the message: {message['message']}."
+            )
+            self.send_message(message['sender'], resp)
+            return False
+    
 
 # Example Usage
 if __name__ == '__main__':
