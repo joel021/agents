@@ -21,6 +21,7 @@ class TestWeb(unittest.TestCase):
         mock_get.return_value.json.return_value = mock_response
         
         results = search_web(query)
+        print("Results:", results)
         
         assert isinstance(results, list), "Search results should be a list."
         assert len(results) > 0, "No search results returned."
