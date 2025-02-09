@@ -22,19 +22,23 @@ class ResearchAgent:
             message=message,
             data= data
         ).to_dict()
+        print("Sending message:", message_dict)
         publish_message(self.redis_instance, message_dict)
 
     def reason(self, message: dict):
 
         if (not message or message.get('recipient', None) != RESEARCH_AGENT_NAME
                 or message.get('sender', None) not in self.ALLOWED_SENDERS):
-            return
+            return False
         
         query = message['message']
         results = search_web(query)  
         
         if not results:
             response = Response(msg=f"No relevant results found for query: {query}", error=True)
+            resp = f"{response.msg}"
+            self.send_message(message['sender'], resp)
+            return False
         else:
             response = Response(msg=f"Results for query: {query}", error=False)
             response.data = results
@@ -44,3 +48,4 @@ class ResearchAgent:
             "query": query,
         }
         self.send_message(message['sender'], resp, data)
+        return True
