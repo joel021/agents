@@ -8,7 +8,7 @@ from agents.db.status import Status
 class ProjectManagerAgent:
 
     def __init__(self, epic_service: EpicService, llm_reasoner: LLMReasoner):
-        self.llm_reasoner = agent_switch
+        self.llm_reasoner = llm_reasoner
         self.story_service = StoryService()
         self.epic_service = epic_service
 

@@ -1,28 +1,28 @@
 import unittest
 
 from agents.core.dto.llm_schema import ArgumentSchema
-from agents.core.os_agent.operation_system_agent import OperationSystemAgent
+from agents.core.llm_reasoner import get_new_llm_reasoner
+from agents.core.os_agent.instructions_performer import InstructionsPerformer
+from agents.core.os_agent.os_instructions import OsInstructions
 
 
-class TestGeminiHandler(unittest.TestCase):
+class TestInstructionPerformer(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(self):
-        pass
 
     def test_convert_to_dict(self):
-        instruction_handler = OperationSystemAgent()
+
+        instructions_performer = InstructionsPerformer(get_new_llm_reasoner(), OsInstructions())
 
         args = [ArgumentSchema(arg="arg1", value="value"),
                 ArgumentSchema(arg="arg2", value="value"),
                 ArgumentSchema(arg="arg3", value="value")]
-        args_dict = instruction_handler.convert_to_dict(args)
+        args_dict = instructions_performer.convert_to_dict(args)
 
         assert args_dict['arg1']
 
     def test_execute_instruction(self):
 
-        instruction_handler = OperationSystemAgent()
+        instructions_performer = InstructionsPerformer(get_new_llm_reasoner(), OsInstructions())
         instructions = {
                 "function_name": "execute_terminal",
                 "arguments": [
@@ -37,5 +37,5 @@ class TestGeminiHandler(unittest.TestCase):
                 ]
             }
 
-        response = instruction_handler.execute_instruction(instructions)
+        response = instructions_performer.execute_instruction(instructions)
         assert not response.error
