@@ -1,12 +1,21 @@
 from agents.db.service.story_service import StoryService
 from agents.db.status import Status
 from agents.db.task import Task
+from bson import ObjectId
 
 
 class TaskService:
 
     def __init__(self, story_service: StoryService):
         self.story_service = story_service
+    
+    def get_by_id(self, task_id: str) -> Task:
+        try:
+            task = Task.objects.get(id=task_id)
+            return task
+        except Exception as e:
+            print(f"Error retrieving task with id {task_id}: {e}")
+            return None
 
     def set_status(self, task: Task, status: Status) -> Task:
 
