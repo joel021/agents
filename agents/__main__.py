@@ -4,6 +4,7 @@ from multiprocessing import Process
 from mongoengine import connect
 from agents.config import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME, WORK_DIR
 from agents.core.os_agent.os_agent_handler import start_os_agent
+from agents.core.research_agent.research_agent_handler import start_researcher_agent
 from agents.core.user_agent import start_user_interaction
 
 
@@ -18,6 +19,10 @@ def main():
     processes = [
         {
             "function": start_os_agent,
+            "args": {}
+        },
+        {
+            "function": start_researcher_agent,
             "args": {}
         }
     ]

@@ -6,10 +6,12 @@ from agents.utils.jsons import decode_message
 from agents.utils.redis_utils import get_redis_conn
 
 
-def start_os_agent():
+def start_researcher_agent():
 
-    redis_instance, pubsub = get_redis_conn(RESEARCH_AGENT_NAME)
+    redis_instance, pubsub = get_redis_conn()
     os_instruction_handler = ResearchAgent(get_new_llm_reasoner(), redis_instance)
+
+    print("Researcher agent started.")
 
     for message in pubsub.listen():
 
@@ -17,3 +19,4 @@ def start_os_agent():
         os_instruction_handler.reason(message_dict)
 
     print(f"{RESEARCH_AGENT_NAME} stopped to listen.")
+
