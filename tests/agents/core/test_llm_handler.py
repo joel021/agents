@@ -3,10 +3,10 @@ import os.path
 import unittest
 
 from agents.core.dto.llm_schema import BreakEpicIntoStoriesSchema, BreakStoryIntoTasksSchema, StorySchema, \
-    GenerateOSInstructionsSchema
+    GenerateOSActionsSchema
 from agents.core.llm_reasoner import GeminiReasoner
 from agents.config import GEMINI_API_KEY, WORK_DIR
-from agents.core.pm_agent.instruction_performer import InstructionPerformer
+from agents.core.os_agent.os_instructions import OsInstructions
 
 
 class TestGeminiHandler(unittest.TestCase):
@@ -52,6 +52,6 @@ class TestGeminiHandler(unittest.TestCase):
                   '/home/joel/gemini/restaurant and the package name is com.restaurant. Consider User is on '
                   'model package in com.example.restaurant.model.User and has the following attributes: '
                   'name, email, password, roles. The available actions for perform this task are: '
-                  f'{InstructionPerformer.get_available_instructions_str()}')
-        response_dict = self.gemini_handler.reason_dict(prompt, GenerateOSInstructionsSchema)
+                  f'{OsInstructions().actions}')
+        response_dict = self.gemini_handler.reason_dict(prompt, GenerateOSActionsSchema)
         assert response_dict

@@ -21,11 +21,23 @@ class Story(DataModel, Document):
 
         return is_done
 
+    @staticmethod
+    def from_dict(data: dict):
+
+        story = Story(
+            title=data.get("title", None),
+            status=Status.from_keyword(data.get("status", None)),
+            description=data.get("description", None),
+            summary=data.get("summary", None),
+        )
+        return story
+
     def to_dict(self):
 
         return {
+            'id': self.id,
             'title': self.title,
-            'status': str(self.status).upper(),
+            'status': str(self.status.name),
             'description': self.description,
             'tasks': entity_list_to_dict_list(self.tasks),
             'summary': self.summary,
