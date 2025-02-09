@@ -14,10 +14,12 @@ def start_project_manager_agent():
     database_handler = DatabaseHandler(EpicService())
     pm_agent = ProjectManagerAgent(get_new_llm_reasoner(), database_handler, redis_instance)
 
+    print("\nProject Manager agent started.")
     for message in pubsub.listen():
 
         message_dict = decode_message(message)
-        pm_agent.reason(MessageDTO(**message_dict))
+        if message_dict:
+            pm_agent.reason(MessageDTO(**message_dict))
 
     print(f"{PROJECT_MANAGER_AGENT_NAME} stopped to listen.")
 

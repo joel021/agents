@@ -2,12 +2,17 @@ import time
 
 class MessageDTO:
 
-    def __init__(self, sender: str=None, recipient: str=None, message: str=None, data: dict = None):
-        self.sender = sender
+    def __init__(self, sender: str=None, recipient: str=None, message: str=None, data: dict = None,
+                 timestamp: str = None):
         self.recipient = recipient
         self.message = message
         self.data = data
-        self.timestamp: str = time.strftime("%Y-%m-%d %H:%M:%S")
+        self.sender = sender
+
+        if not timestamp:
+            self.timestamp: str = time.strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            self.timestamp = timestamp
 
     def to_dict(self):
         return {
