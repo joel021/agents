@@ -6,7 +6,7 @@ from bson import ObjectId
 
 class TaskService:
 
-    def __init__(self, story_service: StoryService):
+    def __init__(self, story_service: StoryService = None):
         self.story_service = story_service
     
     def get_by_id(self, task_id: str) -> Task:

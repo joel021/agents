@@ -1,13 +1,12 @@
 from redis import Redis
+from agents.core.actuator.redis_comm import publish_message
+from agents.core.dto.message_dto import MessageDTO
 from agents.core.llm_reasoner import LLMReasoner
 import google.generativeai as genai
-from agents.core.dto.llm_schema import GenerateOSInstructionsSchema
 from agents.constants import SOFTWARE_ENGINEER_AGENT_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
-import os
-from model_settings import MODEL_NAME, SAFETY_SETTINGS
-from INPUT_PROMPTS import create_prompts_prompt, review_code_prompt
-from agents.utils.redis_utils import publish_message
-from agents.core.message import Message
+from agents.core.software_engineer.model_settings import MODEL_NAME, SAFETY_SETTINGS
+from agents.core.software_engineer.input_prompts import create_prompts_prompt, review_code_prompt
+
 
 # Configure the Gemini API key and model settings.
 # GOOGLE_API_KEY = os.getenv("AIzaSyBgTdZNlXRyk0ZFm8Af9kw4x82Y4c0Xixg")  # Set your API key in the environment variable
@@ -18,12 +17,14 @@ if not GOOGLE_API_KEY:
 genai.configure(api_key=GOOGLE_API_KEY)
 
 class SoftwareEngineer:
-    def __init__(self, llm: LLMReasoner, redis_instance: Redis):
+    def __init__(self, redis_instance: Redis, task_service):
         self.model = genai.GenerativeModel(MODEL_NAME, safety_settings=SAFETY_SETTINGS)
+        self.task_service = task_service
+        self.redis_instance = redis_instance
     
     def send_message(self, recipient: str, message: str):
 
-        message_dict = Message(
+        message_dict = MessageDTO(
             sender=SOFTWARE_ENGINEER_AGENT_NAME,
             recipient=recipient,
             message=message,
@@ -66,14 +67,15 @@ What is your decision?
             print("Empty message or incorrect recipient")
             return False
         
-        task_id = message['message']
+        data = message['data']
+        task_id = data.get('id', None)
         task = self.task_service.get_by_id(task_id)
 
         prompt = self.create_prompts(task)
 
         if prompt:
             self.send_message(DEVELOPER_SPECIALIST_AGENT_NAME, prompt)
-            return False
+            return True
         else:
             resp = (
                 f"I could not attend to the message: {message['message']}."
