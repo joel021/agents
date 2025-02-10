@@ -11,19 +11,17 @@ from agents.core.actuator.redis_comm import get_redis_conn, publish_message
 
 def listen(pubsub: PubSub, print_all: bool = True):
 
-    print("Service started")
+    print("\nService started")
     message_service = MessageService()
 
     for message_str in pubsub.listen():
         msg_dict = decode_message(message_str)
+
         if msg_dict:
             message = MessageDTO(**msg_dict)
             message_service.save(msg_dict)
-            if print_all:
+            if print_all and message.sender != USER_NAME:
                 print(f"\n{time.strftime("%Y-%m-%d %H:%M:%S")} {message.sender}: @{message.recipient}\n {message.message}\n")
-        else:
-            #print(f"\n{time.strftime("%Y-%m-%d %H:%M:%S")} {USER_NAME} - Received an invalid message: {message_str}\n")
-            pass
 
 def start_user_interaction():
 

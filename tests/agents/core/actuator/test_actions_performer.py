@@ -68,7 +68,7 @@ class TestActionsPerformer(unittest.TestCase):
             }
         ]
         actions_performer = ActionsPerformer(database_handler.available_actions)
-        last, results = actions_performer.execute_actions(actions)
+        results, last = actions_performer.execute_actions(actions)
 
         assert len(results) > 0, "Added a story into a existing epic in the database successfully."
 
@@ -112,6 +112,5 @@ class TestActionsPerformer(unittest.TestCase):
             }
         ]
         actions_performer = ActionsPerformer(database_handler.available_actions)
-        last, results = actions_performer.execute_actions(actions)
-
-        assert last[0]['result'].to_dict().get('status') == Status.DONE.name
+        results, current_result = actions_performer.execute_actions(actions)
+        assert results[0]['result'].get('status') == Status.DONE.name

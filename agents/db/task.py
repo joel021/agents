@@ -15,9 +15,32 @@ class Task(DataModel, Document):
     def is_done(self):
         return self.status == Status.DONE
 
+    @staticmethod
+    def from_dict(data: dict) -> 'Task':
+
+        if data.get('id', None):
+            task = Task(
+                id=data['id'],
+                title=data.get('title', None),
+                status=Status.from_keyword(data.get('status', Status.TODO.name)),
+                specification=data.get('specification', None),
+                instructions=data.get('instructions', None),
+                summary=data.get('summary', None),
+            )
+        else:
+            task = Task(
+                title=data.get('title', None),
+                status=Status.from_keyword(data.get('status', Status.TODO.name)),
+                specification=data.get('specification', None),
+                instructions=data.get('instructions', None),
+                summary=data.get('summary', None),
+            )
+        return task
+
     def to_dict(self):
 
         return {
+            'id': self.id,
             'title': self.title,
             'status': str(self.status).upper(),
             'specification': self.specification,

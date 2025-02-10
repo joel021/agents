@@ -2,12 +2,14 @@ from redis import Redis
 
 from agents.constants import PROJECT_MANAGER_AGENT_NAME, USER_NAME, AGENTS_DESCRIPTIONS
 from agents.core.actuator.actions_performer import ActionsPerformer
+from agents.core.actuator.class_inspector import db_class_model_describer
 from agents.core.dto.response import Response
 from agents.core.llm_reasoner import LLMReasoner
 from agents.core.dto.message_dto import MessageDTO
 from agents.core.pm_agent.database_handler import DatabaseHandler
 from agents.core.pm_agent.schemas import MessageAgents, GenerateDataBaseActionsSchema
 from agents.core.actuator.redis_comm import publish_message
+from agents.db.epic import Epic
 
 
 class ProjectManagerAgent:
@@ -39,10 +41,12 @@ class ProjectManagerAgent:
     def _reason_actions(self, message: MessageDTO, interaction_reasoning_dict: dict) -> dict:
         """Reasons about necessary actions and returns the reasoning dictionary."""
 
+        db_entities_desc = db_class_model_describer(Epic)
         prompt = (f"You have received a message from {message.sender}: \n"
                   f"{message.message}. Then, you commanded them as follows: \n {interaction_reasoning_dict}. "
                   f"Decide whether is necessary or not perform an action among the available: "
-                  f"{self.database_handler.get_available_epic_actions()}. The project overview is: {self.plan_summary}."
+                  f"{self.database_handler.get_available_epic_actions()}. The models: {db_entities_desc} ."
+                  f"The project overview is: {self.plan_summary}."
                   f"The past messages resume is: {self.messages_summary}.")
         return self.llm_reasoner.reason_dict(prompt, GenerateDataBaseActionsSchema)
 
@@ -83,6 +87,16 @@ class ProjectManagerAgent:
     def update_memory(self, message: dict, agent_answer: dict, summary: str):
 
         messages = str([message, agent_answer])
-        self.messages_summary = self.llm_reasoner.simple_answer(f"Summary the following messages: {messages}")
+        self.messages_summary += self.llm_reasoner.simple_answer(f"Summary the following messages: {messages}")
         self.plan_summary += summary
 
+        if len(self.messages_summary) > 3_000:
+            self.messages_summary = self.llm_reasoner.simple_answer(f"The following text is very long, it describes a "
+                                                                    f"sequence of events, where the most recent ones are"
+                                                                    f"likely to be more important, then, rewrite to be "
+                                                                    f"more concise:\n {self.messages_summary}")
+        if len(self.plan_summary) > 3_000:
+            self.plan_summary = self.llm_reasoner.simple_answer(f"The following text is very long, it describes a "
+                                                                    f"sequence of events, where the most recent ones are"
+                                                                    f"likely to be more important, then, rewrite to be "
+                                                                    f"more concise:\n {self.plan_summary}")

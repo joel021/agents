@@ -17,22 +17,34 @@ class TaskService:
             print(f"Error retrieving task with id {task_id}: {e}")
             return None
 
-    def set_status(self, task: Task, status: Status) -> Task:
+    def set_status(self, task: Task, status: Status) -> dict:
+
+        if isinstance(task, dict):
+            task = Task.objects.get(id=task['id'])
 
         task.status = status
-        return task.save()
+        return task.save().to_dict()
 
-    def create(self, story_id: str, description: str) -> Task:
+    def create(self, story_id: str, description: str) -> dict:
 
         task = Task(status=Status.TODO, description=description).save()
         self.story_service.add_task(story_id, task)
-        return task
+        return task.to_dict()
 
-    def set_summary(self, task: Task, summary: str) -> Task:
+    def set_summary(self, task: Task, summary: str) -> dict:
 
+        if isinstance(task, dict):
+            task = Task.objects.get(id=task['id'])
         task.summary = summary
-        return task.save()
+        return task.save().to_dict()
 
-    def set_instructions(self, task: Task, instructions: list[dict]) -> Task:
+    def set_instructions(self, task: Task, instructions: list[dict]) -> dict:
+
+        if isinstance(task, dict):
+            task = Task.objects.get(id=task['id'])
+
         task.instructions = instructions
         return task.save()
+
+    def find_by_id(self, id: str) -> dict:
+        return Task.objects.get(id=id).to_dict()

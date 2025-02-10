@@ -1,5 +1,6 @@
 import inspect
 from typing import Dict, Any
+from mongoengine import Document, StringField, ListField, ReferenceField, EnumField
 
 from agents.core.dto.llm_schema import ArgumentSchema
 from agents.core.dto.response import Response
@@ -47,6 +48,44 @@ def get_class_description(cls, cls_instance) -> Dict[str, Dict[str, Any]]:
                 "args": arg_descriptions
             }
     return class_description
+
+
+def db_class_model_describer(cls, visited=None):
+    if visited is None:
+        visited = set()
+
+    if cls in visited:
+        return "Recursive Reference"
+
+    visited.add(cls)
+    result = {}
+
+    for attr, value in cls.__dict__.items():
+
+        if "_" == attr[0:1]:
+            continue
+
+        if isinstance(value, EnumField):
+            result[attr] = ", ".join(e.name for e in value.choices)
+        elif isinstance(value, StringField):
+            result[attr] = "StringField"
+        elif isinstance(value, ListField):
+            if isinstance(value.field, ReferenceField):
+                result[attr] = [db_class_model_describer(value.field.document_type, visited)]  # List of nested descriptions
+            elif isinstance(value.field, StringField):
+                result[attr] = ["StringField"]
+            elif isinstance(value.field, EnumField):
+                result[attr] = [", ".join(e.name for e in value.field._enum)]
+            else:
+                result[attr] = [value.field.__class__.__name__]
+        elif isinstance(value, ReferenceField):
+            result[attr] = db_class_model_describer(value.document_type, visited)  # Recursive call
+        elif isinstance(value, type) and issubclass(value, Document):
+            result[attr] = db_class_model_describer(value, visited)  # Recursive call for nested classes
+
+    visited.remove(cls)
+
+    return result
 
 def execute_function(action_dict: dict, available_functions: dict) -> Response:
 

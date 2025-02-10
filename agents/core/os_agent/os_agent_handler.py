@@ -8,7 +8,7 @@ from agents.core.actuator.redis_comm import get_redis_conn
 
 def start_os_agent():
 
-    print("Os Agent Started")
+    print("\nOs Agent Started")
     redis_instance, pubsub = get_redis_conn()
     os_instruction_handler = OperationSystemAgent(get_new_llm_reasoner(), redis_instance)
 
