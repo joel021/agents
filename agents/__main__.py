@@ -6,6 +6,8 @@ from agents.config import DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME, W
 from agents.core.os_agent.os_agent_handler import start_os_agent
 from agents.core.pm_agent.pm_agent_handler import start_project_manager_agent
 from agents.core.research_agent.research_agent_handler import start_researcher_agent
+from agents.core.software_engineer.se_handler import start_software_engineer_agent
+from agents.core.developer_agent.developer_agent_handler import start_developer_specialist_agent
 from agents.core.user_agent import start_user_interaction
 
 
@@ -30,6 +32,15 @@ def main():
             "function": start_project_manager_agent,
             "args": {}
         },
+        {
+            "function": start_developer_specialist_agent,
+            "args": {}
+        },
+        {
+            "function": start_software_engineer_agent,
+            "args": {}
+        },
+
     ]
 
     connect(db=DB_NAME, username=DB_USERNAME, password=DB_PASSWORD, host=DB_HOST, port=int(DB_PORT),

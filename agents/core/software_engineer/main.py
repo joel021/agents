@@ -1,20 +1,17 @@
 from redis import Redis
 from agents.core.actuator.redis_comm import publish_message
 from agents.core.dto.message_dto import MessageDTO
-from agents.core.llm_reasoner import LLMReasoner
+from agents.config import GEMINI_API_KEY
 import google.generativeai as genai
-from agents.constants import SOFTWARE_ENGINEER_AGENT_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
-from agents.core.software_engineer.model_settings import MODEL_NAME, SAFETY_SETTINGS
-from agents.core.software_engineer.input_prompts import create_prompts_prompt, review_code_prompt
+from agents.constants import SOFTWARE_ENGINEER_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
+from agents.core.software_engineer.MODEL_SETTINGS import MODEL_NAME, SAFETY_SETTINGS
+from agents.core.software_engineer.INPUT_PROMPTS import create_prompts_prompt, review_code_prompt
 
 
-# Configure the Gemini API key and model settings.
-# GOOGLE_API_KEY = os.getenv("AIzaSyBgTdZNlXRyk0ZFm8Af9kw4x82Y4c0Xixg")  # Set your API key in the environment variable
-GOOGLE_API_KEY = "AIzaSyBgTdZNlXRyk0ZFm8Af9kw4x82Y4c0Xixg"  # Set your API key in the environment variable
-if not GOOGLE_API_KEY:
+if not GEMINI_API_KEY:
     raise Exception("Please set the GOOGLE_API_KEY environment variable.")
 
-genai.configure(api_key=GOOGLE_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
 
 class SoftwareEngineer:
     def __init__(self, redis_instance: Redis, task_service):
@@ -25,7 +22,7 @@ class SoftwareEngineer:
     def send_message(self, recipient: str, message: str):
 
         message_dict = MessageDTO(
-            sender=SOFTWARE_ENGINEER_AGENT_NAME,
+            sender=SOFTWARE_ENGINEER_NAME,
             recipient=recipient,
             message=message,
         ).to_dict()
@@ -63,7 +60,7 @@ What is your decision?
         return response.text
     
     def reason(self, message: dict) -> bool:
-        if not message or not message.get('recipient', None) == SOFTWARE_ENGINEER_AGENT_NAME:
+        if not message or not message.get('recipient', None) == SOFTWARE_ENGINEER_NAME:
             print("Empty message or incorrect recipient")
             return False
         
@@ -84,11 +81,10 @@ What is your decision?
             return False
     
 
-# Example Usage
 if __name__ == '__main__':
     engineer = SoftwareEngineer(name="Alice")
 
-    # Example: Resolve Tasks
+
     project_state = {
         "active_project": True,
         "tasks_assigned": True,

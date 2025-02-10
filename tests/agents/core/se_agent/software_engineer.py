@@ -13,7 +13,7 @@ from agents.db.story import Story
 
 from agents.core.actuator.redis_comm import get_redis_conn
 from agents.core.dto.message_dto import MessageDTO
-from agents.constants import PROJECT_MANAGER_AGENT_NAME, SOFTWARE_ENGINEER_AGENT_NAME
+from agents.constants import PROJECT_MANAGER_AGENT_NAME, SOFTWARE_ENGINEER_NAME
 from agents.core.software_engineer.main import SoftwareEngineer
 
 
@@ -34,7 +34,7 @@ class TestSoftwareEngineerAgent(unittest.TestCase):
 
         message = MessageDTO(
             sender=PROJECT_MANAGER_AGENT_NAME,
-            recipient=SOFTWARE_ENGINEER_AGENT_NAME,
+            recipient=SOFTWARE_ENGINEER_NAME,
             message="60b8d6d6b0e4a45f12345678",  # A MongoDB task ID as a string.
             data=self.task.to_dict()
         )
