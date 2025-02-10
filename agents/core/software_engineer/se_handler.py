@@ -7,7 +7,7 @@ from agents.utils.jsons import decode_message
 from agents.core.actuator.redis_comm import get_redis_conn
 
 
-def start_os_agent():
+def start_software_engineer_agent():
 
     print("Software Engineer Agent Started")
     redis_instance, pubsub = get_redis_conn()
