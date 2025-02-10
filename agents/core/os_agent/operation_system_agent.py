@@ -30,7 +30,6 @@ class OperationSystemAgent:
     def reason(self, message: dict) -> bool:
 
         if not message or not message.get('recipient', None) == OPERATION_SYSTEM_AGENT_NAME:
-            print("Empty message")
             return False
 
         prompt = f"You are a Ubuntu specialist and you are in a group of your team. {message['sender']} have sent" \

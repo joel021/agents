@@ -11,7 +11,7 @@ def start_researcher_agent():
     redis_instance, pubsub = get_redis_conn()
     research_handler = ResearchAgent(get_new_llm_reasoner(), redis_instance)
 
-    print("Researcher agent started.")
+    print("\nResearcher agent started.")
 
     for message in pubsub.listen():
 

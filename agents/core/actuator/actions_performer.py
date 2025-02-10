@@ -17,7 +17,7 @@ class ActionsPerformer:
         performed_instructions = []
 
         if not actions:
-            return Response("No actions to perform", False)
+            return results, Response("No actions to perform", False)
 
         while actions:
             action = actions.pop(0)

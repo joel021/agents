@@ -13,7 +13,7 @@ class Message(Document):
     @staticmethod
     def from_dict(data: dict):
 
-        message = Message(title=data.get("sender", None),
+        message = Message(sender=data.get("sender", None),
                           recipient=data.get("recipient", None),
                           message=data.get("message", None),
                           data=data.get("data", None),
