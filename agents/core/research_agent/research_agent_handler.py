@@ -9,14 +9,14 @@ from agents.core.actuator.redis_comm import get_redis_conn
 def start_researcher_agent():
 
     redis_instance, pubsub = get_redis_conn()
-    os_instruction_handler = ResearchAgent(get_new_llm_reasoner(), redis_instance)
+    research_handler = ResearchAgent(get_new_llm_reasoner(), redis_instance)
 
     print("Researcher agent started.")
 
     for message in pubsub.listen():
 
         message_dict = decode_message(message)
-        os_instruction_handler.reason(message_dict)
+        research_handler.reason(message_dict)
 
     print(f"{RESEARCH_AGENT_NAME} stopped to listen.")
 

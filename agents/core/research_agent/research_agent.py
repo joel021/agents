@@ -1,5 +1,5 @@
 from redis import Redis
-from agents.constants import PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_NAME, RESEARCH_AGENT_NAME
+from agents.constants import PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_NAME, RESEARCH_AGENT_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
 from agents.core.dto.response import Response
 from agents.core.dto.message_dto import MessageDTO
 from agents.core.llm_reasoner import LLMReasoner
@@ -9,7 +9,7 @@ from agents.utils.web import search_web
 
 class ResearchAgent:
 
-    ALLOWED_SENDERS = {PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_NAME}
+    ALLOWED_SENDERS = {PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_NAME,DEVELOPER_SPECIALIST_AGENT_NAME}
 
     def __init__(self, llm: LLMReasoner,redis_instance: Redis):
         self.llm = llm
