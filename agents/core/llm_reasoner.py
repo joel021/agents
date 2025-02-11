@@ -40,7 +40,7 @@ class GeminiReasoner(LLMReasoner):
         return self.model.generate_content(prompt).text
 
 
-def get_new_llm_reasoner():
+def get_new_llm_reasoner() -> LLMReasoner:
     if GEMINI_API_KEY:
         return GeminiReasoner(GEMINI_API_KEY)
     elif GPT_API_KEY:

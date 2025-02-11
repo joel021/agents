@@ -1,8 +1,8 @@
 import requests
-from agents.config import WIKIPEDIA_API_KEY
+from agents.config import WIKIPEDIA_API_URL
 
 def search_web(query: str):
-    search_url = f"{WIKIPEDIA_API_KEY}?action=query&list=search&srsearch={query}&format=json"
+    search_url = f"{WIKIPEDIA_API_URL}?action=query&list=search&srsearch={query}&format=json"
     try:
         response = requests.get(search_url)
         response.raise_for_status()

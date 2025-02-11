@@ -23,12 +23,10 @@ class DeveloperSpecialistAgent:
             recipient=recipient,
             message=message,
         ).to_dict()
-        print("Sending message:", message_dict)
         publish_message(self.redis_instance, message_dict)
 
     def reason(self, message: dict) -> bool:
         if not message or not message.get('recipient', None) == DEVELOPER_SPECIALIST_AGENT_NAME:
-            print("Empty or invalid message")
             return False
 
         prompt = (f"You are a software development specialist. {message['sender']} has provided the following "

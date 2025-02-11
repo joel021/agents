@@ -8,14 +8,3 @@ def create_prompts_prompt(task):
             2. Include in your prompt you want a code only output, please.
             """
     return se_prompt
-
-
-def review_code_prompt(task, code):
-    prompt = f"""You are a senior software engineer reviewing code produced by a junior developer. Your role is to provide constructive feedback focusing on code quality, potential bugs, and adherence to best practices.
-        
-Task Description: {task['specification']}
-
-Code to Review:
-{code}
-
-Provide your feedback concisely, without rewriting the code."""

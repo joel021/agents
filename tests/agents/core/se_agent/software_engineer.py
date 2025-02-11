@@ -14,7 +14,7 @@ from agents.db.story import Story
 from agents.core.actuator.redis_comm import get_redis_conn
 from agents.core.dto.message_dto import MessageDTO
 from agents.constants import PROJECT_MANAGER_AGENT_NAME, SOFTWARE_ENGINEER_NAME
-from agents.core.software_engineer.main import SoftwareEngineer
+from agents.core.software_engineer.softwate_engineer_agent import SoftwareEngineer
 
 
 
