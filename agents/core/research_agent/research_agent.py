@@ -11,7 +11,7 @@ class ResearchAgent:
 
     ALLOWED_SENDERS = {PROJECT_MANAGER_AGENT_NAME, OPERATION_SYSTEM_AGENT_NAME,DEVELOPER_SPECIALIST_AGENT_NAME}
 
-    def __init__(self, llm: LLMReasoner,redis_instance: Redis):
+    def __init__(self, llm: LLMReasoner, redis_instance: Redis):
         self.llm = llm
         self.redis_instance = redis_instance
 

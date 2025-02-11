@@ -4,7 +4,7 @@ OPERATION_SYSTEM_AGENT_NAME = "Operation System"
 PROJECT_MANAGER_AGENT_NAME = "Project Manager"
 DEVELOPER_SPECIALIST_AGENT_NAME = "Developer Specialist"
 RESEARCH_AGENT_NAME = "Research"
-SOFTWARE_ENGINEER_NAME = "Software Engineer"
+SOFTWARE_ENGINEER_AGENT_NAME = "Software Engineer"
 EVERYONE = "Everyone"
 USER_NAME = "User"
 
@@ -31,11 +31,11 @@ AGENTS_DESCRIPTIONS = {
             "other agents might need to retrieve external information to complete a task, such as making decision, check "
             "resolution for errors, etc.",
 
-    SOFTWARE_ENGINEER_NAME: f"This agent is responsible for resolve tasks given by the {PROJECT_MANAGER_AGENT_NAME} "
+    SOFTWARE_ENGINEER_AGENT_NAME: f"This agent is responsible for resolve tasks given by the {PROJECT_MANAGER_AGENT_NAME} "
                             f"agent. This agent can read the task specification from the database and command "
                             f"{OPERATION_SYSTEM_AGENT_NAME}, {RESEARCH_AGENT_NAME}, and {DEVELOPER_SPECIALIST_AGENT_NAME}." ,
 
     DEVELOPER_SPECIALIST_AGENT_NAME: "This agent is responsible for development artfacts software based in specifications received,"
                                       'however will need the code with quality and conformity need to make requests sended,' 
-                                      f"This agent can be communication with: {RESEARCH_AGENT_NAME},{SOFTWARE_ENGINEER_NAME},{PROJECT_MANAGER_AGENT_NAME}." 
+                                      f"This agent can be communication with: {RESEARCH_AGENT_NAME},{SOFTWARE_ENGINEER_AGENT_NAME},{PROJECT_MANAGER_AGENT_NAME}."
 }

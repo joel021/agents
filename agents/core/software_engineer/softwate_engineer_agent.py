@@ -1,7 +1,7 @@
 from redis import Redis
 from agents.core.actuator.redis_comm import publish_message
 from agents.core.dto.message_dto import MessageDTO
-from agents.constants import SOFTWARE_ENGINEER_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
+from agents.constants import SOFTWARE_ENGINEER_AGENT_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
 from agents.core.llm_reasoner import LLMReasoner
 from agents.core.software_engineer.inputs_prompts import create_prompts_prompt
 
@@ -16,7 +16,7 @@ class SoftwareEngineer:
     def send_message(self, recipient: str, message: str):
 
         message_dict = MessageDTO(
-            sender=SOFTWARE_ENGINEER_NAME,
+            sender=SOFTWARE_ENGINEER_AGENT_NAME,
             recipient=recipient,
             message=message,
         ).to_dict()
@@ -28,7 +28,7 @@ class SoftwareEngineer:
         return text
     
     def reason(self, message: dict) -> bool:
-        if not message or not message.get('recipient', None) == SOFTWARE_ENGINEER_NAME:
+        if not message or not message.get('recipient', None) == SOFTWARE_ENGINEER_AGENT_NAME:
             print("Empty message or incorrect recipient")
             return False
         
