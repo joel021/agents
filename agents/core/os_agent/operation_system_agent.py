@@ -32,10 +32,11 @@ class OperationSystemAgent:
         if not message or not message.get('recipient', None) == OPERATION_SYSTEM_AGENT_NAME:
             return False
 
-        prompt = f"You are a Ubuntu specialist and you are in a group of your team. {message['sender']} have sent" \
-        f"the following message: \n{message['message']}. Consider that you can perform the following actions: " \
-        f"{self.os_instructions.get_available_instructions_str()}. If the request is not valid, answer setting" \
-        f"```valid:False```. "
+        prompt = (f"You are a Ubuntu specialist and you are in a group of your team. {message['sender']} have sent"
+                  f"the following message: \n{message['message']}. Consider that you can perform the following actions: "
+                  f"{self.os_instructions.get_available_instructions_str()}. If the request is not valid, answer setting"
+                  f"```valid:False```. Whenever need to install things directly to Ubuntu system, configure and run the "
+                  f"docker-compose.yml instead.")
 
         llm_answer = self.llm.reason_dict(prompt, GenerateOSActionsSchema)
         instructions = llm_answer.get('instructions', [])
