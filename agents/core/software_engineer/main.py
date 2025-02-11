@@ -4,8 +4,8 @@ from agents.core.dto.message_dto import MessageDTO
 from agents.config import GEMINI_API_KEY
 import google.generativeai as genai
 from agents.constants import SOFTWARE_ENGINEER_NAME, DEVELOPER_SPECIALIST_AGENT_NAME
-from agents.core.software_engineer.MODEL_SETTINGS import MODEL_NAME, SAFETY_SETTINGS
-from agents.core.software_engineer.INPUT_PROMPTS import create_prompts_prompt, review_code_prompt
+from agents.core.software_engineer.model_settings import MODEL_NAME, SAFETY_SETTINGS
+from agents.core.software_engineer.input_prompts import create_prompts_prompt, review_code_prompt
 
 
 if not GEMINI_API_KEY:
@@ -27,11 +27,6 @@ class SoftwareEngineer:
             message=message,
         ).to_dict()
         publish_message(self.redis_instance, message_dict)
-
-    def review_code_from_developer(self, code):
-        prompt = review_code_prompt(task, code)
-        response = self.model.generate_content(prompt)
-        return response.text
 
     def resolve_tasks(self, project_state, code_snippet):
         prompt = f"""You are the Software Engineer agent responsible for resolving tasks in a project.
@@ -64,9 +59,9 @@ What is your decision?
             print("Empty message or incorrect recipient")
             return False
         
-        data = message['data']
-        task_id = data.get('id', None)
-        task = self.task_service.get_by_id(task_id)
+        data = message.get('data', None)
+        task_id = data.get('id', None) if data else None
+        task = self.task_service.get_by_id(task_id) if task_id else None
 
         prompt = self.create_prompts(task)
 
@@ -80,35 +75,6 @@ What is your decision?
             self.send_message(message['sender'], resp)
             return False
     
-
-if __name__ == '__main__':
-    engineer = SoftwareEngineer(name="Alice")
-
-
-    project_state = {
-        "active_project": True,
-        "tasks_assigned": True,
-        "tasks_ready": True
-    }
-    # code_snippet = "def calculate_sum(a, b): return a * b"
-    # decision = engineer.resolve_tasks(project_state, code_snippet)
-    task = {
-    'id': '#005',
-    'title': 'Implement Matrix Multiplication',
-    'description': (
-        'Create a Python function that multiplies two matrices. '
-        'The function should first validate the dimensions, then perform the multiplication, '
-        'and finally return the resulting matrix.'
-    )
-}
-    se_prompt = engineer.create_prompts(project_state, task)
-    print("Decision for create_prompts:\n", se_prompt)
-
-    model = genai.GenerativeModel(MODEL_NAME, safety_settings=SAFETY_SETTINGS)
-    #for prompt in prompts:
-    #placeholder for DS
-    response = model.generate_content(se_prompt)
-    print(response.text)
 
     # You can uncomment and test other methods as needed:
     # review_feedback = engineer.review_code_from_developer(code_snippet, "Calculate sum function", "Math utility module")
