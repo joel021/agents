@@ -9,4 +9,4 @@ def search_web(query: str):
         results = response.json().get("query", {}).get("search", [])
         return [{"title": item["title"], "snippet": item["snippet"]} for item in results[:8]] 
     except requests.RequestException as e:
-        return [{"error": f"Search failed: {e}"}]
+        return []
