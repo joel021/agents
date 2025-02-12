@@ -34,7 +34,9 @@ class ProjectManagerAgent:
         prompt = (f"You have received a message from {message.sender}. You have to manage the agents and communicate "
                   f"to the user, if necessary.: \n"
                   f"{message.message}. "
-                  f"The specification of the agents are: {AGENTS_DESCRIPTIONS}")
+                  f"The project overview is: {self.plan_summary}."
+                  f"The past messages resume is: {self.messages_summary}."
+                  f"The specification of the agents are: {AGENTS_DESCRIPTIONS}. Send massage to the other agents.")
 
         return self.llm_reasoner.reason_dict(prompt, MessageAgents)
 
@@ -69,7 +71,7 @@ class ProjectManagerAgent:
     def reason(self, message: MessageDTO) -> bool:
         """Handles message reasoning, action execution, and response sending."""
 
-        if message.recipient != PROJECT_MANAGER_AGENT_NAME and message.sender != USER_NAME:
+        if message.recipient != PROJECT_MANAGER_AGENT_NAME or not message.message:
             return False
 
         interaction_reasoning_dict = self._reason_agents(message)

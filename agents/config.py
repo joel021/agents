@@ -3,8 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+GPT_API_KEY = None
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", None)
-GPT_API_KEY = os.getenv("GPT_API_KEY", None)
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 DB_USERNAME = os.getenv("MONGO_DB_USERNAME", None)
 DB_PASSWORD = os.getenv("MONGO_DB_PASSWORD", None)
 DB_NAME = os.getenv("DB_NAME")

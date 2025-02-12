@@ -23,6 +23,10 @@ class SoftwareEngineer:
         publish_message(self.redis_instance, message_dict)
 
     def create_prompts(self, task):
+
+        if not task or not (task.get("title", None) and task.get("specification", None)):
+            return None
+
         se_prompt = create_prompts_prompt(task)
         text = self.llm_reasoner.simple_answer(se_prompt)
         return text
