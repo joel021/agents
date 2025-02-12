@@ -29,7 +29,6 @@ class SoftwareEngineer:
     
     def reason(self, message: dict) -> bool:
         if not message or not message.get('recipient', None) == SOFTWARE_ENGINEER_AGENT_NAME:
-            print("Empty message or incorrect recipient")
             return False
         
         data = message.get('data', None)

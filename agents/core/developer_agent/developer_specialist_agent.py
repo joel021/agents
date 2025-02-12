@@ -51,7 +51,6 @@ class DeveloperSpecialistAgent:
             self.send_message(message['sender'], resp)
             return False
         else:
-            print("code:", artifact_code)
             self.send_message(message['sender'], f"Software artifact successfully developed based on specifications.\n"
                                                  f"Generated Code:\n{artifact_code}")
             return True

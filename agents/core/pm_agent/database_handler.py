@@ -10,6 +10,5 @@ class DatabaseHandler:
         self.available_actions = get_class_description(EpicService, self.epic_service)
 
     def get_available_epic_actions(self) -> str:
-        return str(self.available_actions).replace("'",
-                                                                "\"").replace(" ", "")
+        return str(self.available_actions).replace("'", "\"").replace(" ", "")
 

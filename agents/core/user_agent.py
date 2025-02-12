@@ -21,7 +21,7 @@ def listen(pubsub: PubSub, print_all: bool = True):
             message = MessageDTO(**msg_dict)
             message_service.save(msg_dict)
             if print_all and message.sender != USER_NAME:
-                print(f"\n{time.strftime("%Y-%m-%d %H:%M:%S")} {message.sender}: @{message.recipient}\n {message.message}\n")
+                print(f"\n{time.strftime('%Y-%m-%d %H:%M:%S')} {message.sender}: @{message.recipient}\n {message.message}\n")
 
 def start_user_interaction():
 

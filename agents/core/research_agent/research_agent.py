@@ -22,7 +22,6 @@ class ResearchAgent:
             message=message,
             data= data
         ).to_dict()
-        print("Sending message:", message_dict)
         publish_message(self.redis_instance, message_dict)
 
     def reason(self, message: dict):
