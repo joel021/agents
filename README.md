@@ -31,4 +31,4 @@ How does it works?
 Each agent is started as a separate process which they listen and send message to a shared chanel of redis service.
 The Project Manager has communication with the user and command other agents.
 
-
+[View PDF](./static/recommendation_multiagent_system_for_software_enginnering_article.pdf)
