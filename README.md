@@ -18,7 +18,7 @@ This is a Python project using poetry as dependency management. Below are the in
 Project structure
 
 - agents/core: main package of the project
-- agents/actuator: scripts that treats the actuators and perceptions of the agents
+- agents/actuator: scripts that treat the actuators and perceptions of the agents
 - agents/dto: data transfer objects definitions
 - agents/os_agent: operation system agent
 - agents/pm_agent: project manager agent
@@ -26,9 +26,10 @@ Project structure
 - agents/db: treats the database management of the system
 - tests: where the automated tests are implemented
 
-How does it works?
+How does it work?
 
-Each agent is started as a separate process which they listen and send message to a shared chanel of redis service.
+Each agent is started as a separate process that listens and sends messages to a shared channel of redis service.
 The Project Manager has communication with the user and command other agents.
 
-[View PDF](./static/recommendation_multiagent_system_for_software_enginnering_article.pdf)
+The article is available at: https://sol.sbc.org.br/index.php/wesaac/article/view/37549
+
